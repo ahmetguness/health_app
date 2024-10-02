@@ -37,3 +37,16 @@ export const ageItems = [
     value: `${i + 1}`,
   })),
 ];
+
+export const heightItems = Array.from({ length: 61 }, (_, i) => {
+  const heightValue = 140 + i;
+  return { label: `${heightValue} cm`, value: `${heightValue}` };
+});
+
+export const MANAGEMENT_MENU = [
+  { btnName: "Change Personal Information" },
+  { btnName: "Set Medication Reminders" },
+  { btnName: "Meal Planning" },
+  { btnName: "Doctor Appointment Reminders" },
+  { btnName: "Notes" },
+];

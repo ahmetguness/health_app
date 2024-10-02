@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   inputContainer: {
     width: "90%",
     marginHorizontal: "5%",
-    marginTop: "30%",
+    marginTop: "10%",
     justifyContent: "space-evenly",
     flex: 1,
   },

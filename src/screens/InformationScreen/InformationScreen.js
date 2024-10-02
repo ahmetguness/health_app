@@ -1,9 +1,15 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, Button, Alert, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { styles } from "./styles";
-import { ageItems, genderItems, weightItems } from "../../data/data";
+import {
+  ageItems,
+  genderItems,
+  weightItems,
+  heightItems,
+} from "../../data/data";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const InputField = ({ label, value, onChange, placeholder }) => (
   <View style={styles.inputField}>
@@ -41,6 +47,7 @@ export default function InformationScreen() {
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [gender, setGender] = useState("");
+  const [height, setHeight] = useState("");
 
   const handleAgeChange = useCallback((itemValue) => {
     setAge(itemValue);
@@ -54,11 +61,38 @@ export default function InformationScreen() {
     setGender(itemValue);
   }, []);
 
-  const handleNext = () => {
-    if (name === "" || gender === "" || name === "" || weight === "") {
-      console.log("boşş");
+  const handleHeightChange = useCallback((itemValue) => {
+    setHeight(itemValue);
+  }, []);
+
+  const saveDataToStorage = async () => {
+    try {
+      const userInfo = JSON.stringify({
+        name: name,
+        age: age,
+        weight: weight,
+        gender: gender,
+        height: height,
+      });
+      await AsyncStorage.setItem("@user_info", userInfo);
+      console.log("Veri başarıyla kaydedildi.");
+    } catch (error) {
+      console.error("Veri kaydedilirken hata oluştu:", error);
+    }
+  };
+
+  const handleNext = async () => {
+    if (
+      name === "" ||
+      gender === "" ||
+      age === "" ||
+      weight === "" ||
+      height === ""
+    ) {
+      Alert.alert("Error", "Please fill out all fields.");
     } else {
-      console.log({ name, age, weight, gender });
+      console.log({ name, age, weight, gender, height });
+      await saveDataToStorage();
       navigation.navigate("HomeScreen");
     }
   };
@@ -87,6 +121,12 @@ export default function InformationScreen() {
           selectedValue={weight}
           onValueChange={handleWeightChange}
           items={weightItems}
+        />
+        <PickerField
+          label="Height"
+          selectedValue={height}
+          onValueChange={handleHeightChange}
+          items={heightItems}
         />
         <PickerField
           label="Gender"
