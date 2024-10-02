@@ -20,4 +20,6 @@ export const COLORS = {
   darkGrey: "#BDBDBD",
   purple: "#9C27B0",
   pink: "#E91E63",
+  carouselTop: "#D8B5FF",
+  carouselBottom: "#1EAE98",
 };
