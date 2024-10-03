@@ -38,5 +38,26 @@ export const styles = StyleSheet.create({
   menuContainer: {
     flexDirection: "row",
     marginTop: "3%",
+    marginBottom: "5%",
+  },
+  informationContainer: {
+    width: "100%",
+  },
+  innerInformationContainer: {
+    marginTop: "3%",
+    borderRadius: 15,
+    width: "100%",
+    height: 180,
+    backgroundColor: COLORS.carouselBottom,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  infoCard: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  infoText: {
+    color: COLORS.white,
+    marginLeft: "3%",
   },
 });

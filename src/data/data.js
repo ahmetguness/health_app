@@ -44,9 +44,34 @@ export const heightItems = Array.from({ length: 61 }, (_, i) => {
 });
 
 export const MANAGEMENT_MENU = [
-  { btnName: "Change Personal Information" },
-  { btnName: "Set Medication Reminders" },
-  { btnName: "Meal Planning" },
-  { btnName: "Doctor Appointment Reminders" },
-  { btnName: "Notes" },
+  { btnName: "Change Personal Information", iconType: "", iconName: "" },
+  { btnName: "Set Medication Reminders", iconType: "", iconName: "" },
+  { btnName: "Meal Planning", iconType: "", iconName: "" },
+  { btnName: "Doctor Appointment Reminders", iconType: "", iconName: "" },
+  { btnName: "Notes", iconType: "", iconName: "" },
+];
+
+export const monthsOfYear = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+export const daysOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ];
