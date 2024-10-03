@@ -17,9 +17,9 @@ export const CAROUSEL_DATA = [
 
 export const genderItems = [
   { label: "Select Gender", value: "" },
-  { label: "Male", value: "male" },
-  { label: "Female", value: "female" },
-  { label: "Other", value: "other" },
+  { label: "Male", value: "Male" },
+  { label: "Female", value: "Female" },
+  { label: "Other", value: "Other" },
 ];
 
 export const weightItems = [
@@ -44,11 +44,36 @@ export const heightItems = Array.from({ length: 61 }, (_, i) => {
 });
 
 export const MANAGEMENT_MENU = [
-  { btnName: "Change Personal Information", iconType: "", iconName: "" },
-  { btnName: "Set Medication Reminders", iconType: "", iconName: "" },
-  { btnName: "Meal Planning", iconType: "", iconName: "" },
-  { btnName: "Doctor Appointment Reminders", iconType: "", iconName: "" },
-  { btnName: "Notes", iconType: "", iconName: "" },
+  {
+    btnName: "Change Personal Information",
+    iconType: "FontAwesome",
+    iconName: "user",
+    screenName: "InformationScreen",
+  },
+  {
+    btnName: "Set Medication Reminders",
+    iconType: "FontAwesome",
+    iconName: "medkit",
+    screenName: "MedicationReminderScreen",
+  },
+  {
+    btnName: "Meal Planning",
+    iconType: "FontAwesome",
+    iconName: "cutlery",
+    screenName: "MealPlanningScreen",
+  },
+  {
+    btnName: "Doctor Appointment Reminders",
+    iconType: "FontAwesome",
+    iconName: "calendar",
+    screenName: "DoctorAppointmentReminderScreen",
+  },
+  {
+    btnName: "Notes",
+    iconType: "FontAwesome",
+    iconName: "sticky-note",
+    screenName: "NotesScreen",
+  },
 ];
 
 export const monthsOfYear = [

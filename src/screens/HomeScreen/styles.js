@@ -60,4 +60,13 @@ export const styles = StyleSheet.create({
     color: COLORS.white,
     marginLeft: "3%",
   },
+  mealListContainer: {
+    width: "100%",
+    marginTop: "5%",
+  },
+  mealListInnerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginBottom: "5%",
+  },
 });

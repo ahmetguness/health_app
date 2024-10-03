@@ -1,12 +1,15 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { COLORS } from "../../theme/colors";
+import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function ManagementCard({ btnName, icon }) {
+export default function ManagementCard({ btnName, iconName, onPress }) {
   return (
-    <TouchableOpacity style={styles.root}>
-      {icon}
+    <TouchableOpacity style={styles.root} onPress={onPress}>
+      <View style={styles.iconContainer}>
+        <Icon name={iconName} size={24} color={COLORS.white} />
+      </View>
       <Text style={styles.text}>{btnName}</Text>
     </TouchableOpacity>
   );
@@ -22,12 +25,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: COLORS.carouselBottom,
   },
-  half: {
-    height: "50%",
-    justifyContent: "center",
-    alignItems: "center",
+  iconContainer: {
+    marginBottom: 5,
   },
-
   text: {
     fontSize: 12,
     textAlign: "center",

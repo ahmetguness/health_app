@@ -31,6 +31,7 @@ const IntroScreen = () => {
 
   const nextPageHandler = () => {
     navigation.navigate(userData ? "HomeScreen" : "InformationScreen");
+    // navigation.navigate("InformationScreen");
   };
 
   return (

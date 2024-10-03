@@ -16,8 +16,12 @@ import { COLORS } from "../../theme/colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import MealCard from "../../components/cards/MealCard";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
   const { height } = Dimensions.get("window");
   const today = new Date().toISOString().split("T")[0];
 
@@ -126,17 +130,22 @@ const HomeScreen = () => {
         </View>
       </Modal>
 
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.managementContainer}>
           <Text style={styles.title}>Management</Text>
           <ScrollView
             style={styles.menuContainer}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={[styles.scrollContent, { paddingRight: 45 }]}
           >
             {MANAGEMENT_MENU.map((item, index) => (
-              <ManagementCard key={index} btnName={item.btnName} />
+              <ManagementCard
+                key={index}
+                btnName={item.btnName}
+                iconName={item.iconName}
+                onPress={() => navigation.navigate(item.screenName)}
+              />
             ))}
           </ScrollView>
         </View>
@@ -181,6 +190,14 @@ const HomeScreen = () => {
                 <Text style={styles.infoText}>{label}</Text>
               </View>
             ))}
+          </View>
+        </View>
+        <View style={styles.mealListContainer}>
+          <Text style={styles.title}>Meal List</Text>
+          <View style={styles.mealListInnerContainer}>
+            <MealCard mealTime={"Breakfast"} />
+            <MealCard mealTime={"Lunch"} />
+            <MealCard mealTime={"Dinner"} />
           </View>
         </View>
       </ScrollView>
