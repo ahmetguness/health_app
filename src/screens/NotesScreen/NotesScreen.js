@@ -5,13 +5,15 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { formatDateTime } from "../../utils/DateUtil";
 import { styles } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import NoteCard from "../../components/cards/NoteCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NotesScreen() {
   const navigation = useNavigation();
@@ -19,11 +21,54 @@ export default function NotesScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [note, setNote] = useState("");
   const [title, setTitle] = useState("");
+  const [notes, setNotes] = useState([]);
 
   const today = new Date();
   const formattedDay = formatDateTime(today);
 
-  console.log(formattedDay);
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const storedNotes = await AsyncStorage.getItem("notes");
+      if (storedNotes) {
+        setNotes(JSON.parse(storedNotes));
+      }
+    };
+
+    fetchNotes();
+  }, []);
+
+  const saveNote = async () => {
+    const newNote = {
+      title,
+      note,
+      date: formattedDay,
+    };
+
+    const updatedNotes = [...notes, newNote];
+
+    await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+    setNotes(updatedNotes);
+
+    setModalVisible(false);
+    setTitle("");
+    setNote("");
+  };
+
+  const deleteNote = async (index) => {
+    const updatedNotes = notes.filter((_, i) => i !== index);
+    await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+    setNotes(updatedNotes);
+  };
+
+  const editNote = async (index, editedTitle, editedNote) => {
+    const updatedNotes = [...notes];
+    updatedNotes[index].title = editedTitle;
+    updatedNotes[index].note = editedNote;
+
+    await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+    setNotes(updatedNotes);
+  };
+
   return (
     <View style={styles.root}>
       <View style={[styles.navbar, { height: height * 0.06 }]}>
@@ -35,6 +80,22 @@ export default function NotesScreen() {
           <Ionicons name="add-sharp" size={24} color="white" />
         </TouchableOpacity>
       </View>
+
+      <FlatList
+        data={notes}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <NoteCard
+            title={item.title}
+            note={item.note}
+            date={item.date}
+            onDelete={() => deleteNote(index)}
+            onEdit={(editedTitle, editedNote) =>
+              editNote(index, editedTitle, editedNote)
+            }
+          />
+        )}
+      />
 
       <Modal
         transparent={true}
@@ -60,16 +121,7 @@ export default function NotesScreen() {
               textAlignVertical="top"
             />
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.saveButton}
-                onPress={() => {
-                  console.log("Kaydedilen Başlık:", title);
-                  console.log("Kaydedilen Not:", note);
-                  setModalVisible(false);
-                  setTitle("");
-                  setNote("");
-                }}
-              >
+              <TouchableOpacity style={styles.saveButton} onPress={saveNote}>
                 <Text style={styles.buttonText}>Kaydet</Text>
               </TouchableOpacity>
               <TouchableOpacity
