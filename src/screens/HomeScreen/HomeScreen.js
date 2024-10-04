@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -17,11 +17,10 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MealCard from "../../components/cards/MealCard";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
   const { height } = Dimensions.get("window");
   const today = new Date().toISOString().split("T")[0];
 
@@ -37,6 +36,7 @@ const HomeScreen = () => {
     height: "",
   });
 
+  // Function to load user data from AsyncStorage
   const loadUserData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("@user_info");
@@ -48,9 +48,12 @@ const HomeScreen = () => {
     }
   };
 
-  useEffect(() => {
-    loadUserData();
-  }, []);
+  // Load user data when the component is focused
+  useFocusEffect(
+    useCallback(() => {
+      loadUserData();
+    }, [])
+  );
 
   const calculateBMI = useCallback(() => {
     const { weight, height } = userData;

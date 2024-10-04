@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Button, Alert, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { styles } from "./styles";
@@ -10,6 +10,8 @@ import {
 } from "../../data/data";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SecondaryButton from "../../components/buttons/SecondaryButton";
+import jsxRuntime from "react/jsx-runtime";
 
 const InputField = ({ label, value, onChange, placeholder }) => (
   <View style={styles.inputField}>
@@ -42,12 +44,36 @@ const PickerField = React.memo(
 
 export default function InformationScreen() {
   const navigation = useNavigation();
-
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [gender, setGender] = useState("");
   const [height, setHeight] = useState("");
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const userInfoString = await AsyncStorage.getItem("@user_info");
+        if (userInfoString) {
+          const userInfo = JSON.parse(userInfoString);
+          setName(userInfo.name || "");
+          setAge(userInfo.age || "");
+          setWeight(userInfo.weight || "");
+          setGender(userInfo.gender || "");
+          setHeight(userInfo.height || "");
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  const titleText =
+    name === ""
+      ? ["Please", "Enter the required information", "Submit Information"]
+      : ["Update ", "Your Information", "Save Changes"];
 
   const handleAgeChange = useCallback((itemValue) => {
     setAge(itemValue);
@@ -75,9 +101,9 @@ export default function InformationScreen() {
         height: height,
       });
       await AsyncStorage.setItem("@user_info", userInfo);
-      console.log("Veri başarıyla kaydedildi.");
+      console.log("Data saved successfully.");
     } catch (error) {
-      console.error("Veri kaydedilirken hata oluştu:", error);
+      console.error("Error saving data:", error);
     }
   };
 
@@ -100,8 +126,8 @@ export default function InformationScreen() {
   return (
     <View style={styles.root}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title1}>Please</Text>
-        <Text style={styles.title2}>Enter the required information</Text>
+        <Text style={styles.title1}>{titleText[0]}</Text>
+        <Text style={styles.title2}>{titleText[1]}</Text>
       </View>
       <View style={styles.inputContainer}>
         <InputField
@@ -135,8 +161,18 @@ export default function InformationScreen() {
           items={genderItems}
         />
       </View>
-      <View style={{ marginBottom: "10%" }}>
-        <Button title="GO NEXT" onPress={handleNext} />
+      <View
+        style={{
+          marginBottom: "10%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <SecondaryButton
+          title={titleText[2]}
+          onPress={handleNext}
+          style={{ height: height * 0.24 }}
+        />
       </View>
     </View>
   );
