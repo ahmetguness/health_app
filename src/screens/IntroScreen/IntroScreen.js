@@ -17,10 +17,18 @@ const IntroScreen = () => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
+        // Kullanıcı verilerini yükle
         const data = await AsyncStorage.getItem("@user_info");
         if (data) {
           setUserData(JSON.parse(data));
         }
+
+        // AsyncStorage'daki tüm verileri al ve konsola yazdır
+        const keys = await AsyncStorage.getAllKeys();
+        const items = await AsyncStorage.multiGet(keys);
+        items.forEach(([key, value]) => {
+          console.log(`Key: ${key}, Value: ${value}`);
+        });
       } catch (error) {
         console.error("Error loading data:", error);
       }
