@@ -36,7 +36,6 @@ const HomeScreen = () => {
     height: "",
   });
 
-  // Function to load user data from AsyncStorage
   const loadUserData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("@user_info");
@@ -48,7 +47,6 @@ const HomeScreen = () => {
     }
   };
 
-  // Load user data when the component is focused
   useFocusEffect(
     useCallback(() => {
       loadUserData();

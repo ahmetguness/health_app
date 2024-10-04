@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Dimensions,
@@ -8,15 +9,14 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import NavbarContainer from "../../components/navbar/NavbarContainer";
-import { styles } from "./styles";
-import React, { useState, useEffect } from "react";
-import { daysOfWeek } from "../../data/data";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Picker } from "@react-native-picker/picker";
-import MedicineCard from "../../components/cards/MedicineCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
+import NavbarContainer from "../../components/navbar/NavbarContainer";
+import MedicineCard from "../../components/cards/MedicineCard";
+import { Picker } from "@react-native-picker/picker";
+import { daysOfWeek } from "../../data/data";
+import { styles } from "./styles";
 
 export default function MedicationReminderScreen() {
   const { height } = Dimensions.get("window");
@@ -28,6 +28,7 @@ export default function MedicationReminderScreen() {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [selectedDays, setSelectedDays] = useState(new Array(7).fill(false));
+  const [editingIndex, setEditingIndex] = useState(null); // Eklenen state
 
   const [medications, setMedications] = useState([]);
 
@@ -39,7 +40,7 @@ export default function MedicationReminderScreen() {
           const parsedMedications = JSON.parse(storedMedications).map((med) => {
             return {
               ...med,
-              doseTimes: med.doseTimes.map((time) => new Date(time)), // Convert time strings back to Date objects
+              doseTimes: med.doseTimes.map((time) => new Date(time)),
             };
           });
           setMedications(parsedMedications);
@@ -62,15 +63,22 @@ export default function MedicationReminderScreen() {
     setDosesPerDay(1);
     setDoseTimes([]);
     setSelectedDays(new Array(7).fill(false));
+    setEditingIndex(null); // Reset editing index
   };
 
   const handleTimePick = (event, selectedDate) => {
     const currentDate = selectedDate || selectedTime;
     setShowTimePicker(false);
 
-    if (doseTimes.length < dosesPerDay) {
+    if (editingIndex !== null) {
+      // Düzenleme modu için
+      const updatedDoseTimes = [...doseTimes];
+      updatedDoseTimes[editingIndex] = currentDate; // Seçilen zaman güncellenir
+      setDoseTimes(updatedDoseTimes);
+      setEditingIndex(null); // Edit modundan çıkılır
+    } else if (doseTimes.length < dosesPerDay) {
       setSelectedTime(currentDate);
-      setDoseTimes([...doseTimes, currentDate]); // Ensure valid Date objects are stored
+      setDoseTimes([...doseTimes, currentDate]);
     } else {
       alert(`You can only select ${dosesPerDay} time(s) for this medication.`);
     }
@@ -101,7 +109,7 @@ export default function MedicationReminderScreen() {
     await AsyncStorage.setItem(
       "medications",
       JSON.stringify(updatedMedications)
-    ); // Save to AsyncStorage
+    );
     handleCloseModal();
   };
 
@@ -111,7 +119,7 @@ export default function MedicationReminderScreen() {
     await AsyncStorage.setItem(
       "medications",
       JSON.stringify(updatedMedications)
-    ); // Update AsyncStorage
+    );
   };
 
   return (
@@ -175,8 +183,18 @@ export default function MedicationReminderScreen() {
                 justifyContent: "center",
                 alignItems: "center",
                 marginBottom: "3%",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
               }}
             >
+              <SecondaryButton
+                title="Edit Time"
+                onPress={() => {
+                  setEditingIndex(index);
+                  setShowTimePicker(true);
+                }}
+                style={{ height: height * 0.05 }}
+              />
               <Text style={styles.timeText}>
                 Selected Time: {time.toLocaleTimeString()}
               </Text>

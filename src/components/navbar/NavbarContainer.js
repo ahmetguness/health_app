@@ -4,7 +4,12 @@ import { COLORS } from "../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function NavbarContainer({ title, style, onPressToAdd }) {
+export default function NavbarContainer({
+  title,
+  style,
+  onPressToAdd,
+  showAddIcon = true,
+}) {
   const navigation = useNavigation();
 
   return (
@@ -13,9 +18,13 @@ export default function NavbarContainer({ title, style, onPressToAdd }) {
         <Ionicons name="arrow-back-outline" size={24} color="white" />
       </TouchableOpacity>
       <Text style={styles.text}>{title}</Text>
-      <TouchableOpacity onPress={onPressToAdd}>
-        <Ionicons name="add-sharp" size={24} color="white" />
-      </TouchableOpacity>
+      {showAddIcon ? (
+        <TouchableOpacity onPress={onPressToAdd}>
+          <Ionicons name="add-sharp" size={24} color="white" />
+        </TouchableOpacity>
+      ) : (
+        <Text> </Text>
+      )}
     </View>
   );
 }

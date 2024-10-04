@@ -2,10 +2,11 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { COLORS } from "../../theme/colors";
 
-export default function MealCard({ mealTime }) {
+export default function MealCard({ mealTime, mealPlan }) {
   return (
     <View style={styles.root}>
-      <Text style={styles.text}>{mealTime}</Text>
+      <Text style={styles.mealTime}>{mealTime}</Text>
+      <Text style={styles.text}>{mealPlan}</Text>
     </View>
   );
 }
@@ -17,10 +18,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.carouselBottom,
     borderRadius: 15,
     marginTop: "3%",
-    justifyContent: "center",
     alignItems: "center",
   },
-  text: {
+  mealTime: {
     color: COLORS.white,
+    marginTop: "4%",
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.white,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  text: {
+    fontSize: 13,
+    marginTop: "4%",
   },
 });
