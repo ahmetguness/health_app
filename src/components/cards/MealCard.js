@@ -6,7 +6,9 @@ export default function MealCard({ mealTime, mealPlan }) {
   return (
     <View style={styles.root}>
       <Text style={styles.mealTime}>{mealTime}</Text>
-      <Text style={styles.text}>{mealPlan}</Text>
+      <View style={{ padding: "4%" }}>
+        <Text style={styles.text}>{mealPlan}</Text>
+      </View>
     </View>
   );
 }

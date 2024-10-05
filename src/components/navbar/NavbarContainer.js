@@ -14,7 +14,15 @@ export default function NavbarContainer({
 
   return (
     <View style={[styles.root, style]}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        onPress={() => {
+          try {
+            navigation.goBack();
+          } catch (error) {
+            console.error("Error navigating back:", error);
+          }
+        }}
+      >
         <Ionicons name="arrow-back-outline" size={24} color="white" />
       </TouchableOpacity>
       <Text style={styles.text}>{title}</Text>

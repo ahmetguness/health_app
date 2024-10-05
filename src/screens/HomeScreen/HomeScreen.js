@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,11 +13,13 @@ import ManagementCard from "../../components/cards/ManagementCard";
 import { styles } from "./styles";
 import { daysOfWeek, MANAGEMENT_MENU, monthsOfYear } from "../../data/data";
 import { COLORS } from "../../theme/colors";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+// import  from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MealCard from "../../components/cards/MealCard";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
+
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -35,7 +37,13 @@ const HomeScreen = () => {
     gender: "",
     height: "",
   });
+  const [meals, setMeals] = useState({
+    breakfast: "",
+    lunch: "",
+    dinner: "",
+  });
 
+  // Kullanıcının bilgilerini yüklüyoruz
   const loadUserData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("@user_info");
@@ -47,12 +55,32 @@ const HomeScreen = () => {
     }
   };
 
+  // Bugünkü günün yemek planını yüklüyoruz (ilk açılışta)
+  const loadMealsForToday = useCallback(async () => {
+    try {
+      const storedMeals = await AsyncStorage.getItem("meals");
+      if (storedMeals) {
+        const allMeals = JSON.parse(storedMeals);
+        const todayDay = new Date().getDay(); // Bugünün günü (0 = Pazar, 6 = Cumartesi)
+        if (allMeals[todayDay]) {
+          setMeals(allMeals[todayDay]);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading meals:", error);
+    }
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       loadUserData();
-    }, [])
+      const todayDayOfWeek = daysOfWeek[new Date().getDay()];
+      setDayOfWeek(todayDayOfWeek); // Bugünün gününü ayarla
+      loadMealsForToday(); // Sadece bugünün yemek planını göster
+    }, [loadMealsForToday])
   );
 
+  // BMI hesaplama
   const calculateBMI = useCallback(() => {
     const { weight, height } = userData;
     if (weight && height) {
@@ -63,6 +91,7 @@ const HomeScreen = () => {
     return "N/A";
   }, [userData]);
 
+  // Vücut tipi hesaplama
   const getBodyType = useCallback(() => {
     const bmi = calculateBMI();
     if (bmi === "N/A") return "Unknown";
@@ -76,6 +105,7 @@ const HomeScreen = () => {
     return "Morbidly obese (Class 3)";
   }, [calculateBMI]);
 
+  // Seçilen tarihi formatlama
   const formatSelectedDate = useCallback((dateString) => {
     const selectedDay = new Date(dateString);
     return {
@@ -84,20 +114,33 @@ const HomeScreen = () => {
       }, ${selectedDay.getDate()} ${
         monthsOfYear[selectedDay.getMonth()]
       } ${selectedDay.getFullYear()}`,
-      dayOfWeek: daysOfWeek[selectedDay.getDay()],
     };
   }, []);
 
+  // Takvimde tıklanan tarihi göster, meal listi etkileme
   const handleDayPress = useCallback(
     ({ dateString }) => {
-      const { formatted, dayOfWeek } = formatSelectedDate(dateString);
-      setSelectedDate(dateString);
-      setFormattedDate(formatted);
-      setDayOfWeek(dayOfWeek);
-      setIsModalVisible(true);
+      const { formatted } = formatSelectedDate(dateString);
+      setSelectedDate(dateString); // Tıklanan tarihi ayarla
+      setFormattedDate(formatted); // Formatlı tarih modalda gösterilecek
+      setIsModalVisible(true); // Modalı aç
     },
     [formatSelectedDate]
   );
+
+  // Icon componentini getir
+  const getIconComponent = (iconType) => {
+    switch (iconType) {
+      case "FontAwesome":
+        return FontAwesome;
+      case "MaterialCommunityIcons":
+        return MaterialCommunityIcons;
+      case "FontAwesome5":
+        return FontAwesome5;
+      default:
+        return FontAwesome;
+    }
+  };
 
   return (
     <View style={styles.root}>
@@ -108,7 +151,7 @@ const HomeScreen = () => {
       <View style={styles.calendarContainer}>
         <Calendar
           style={styles.calendar}
-          onDayPress={handleDayPress}
+          onDayPress={handleDayPress} // Takvimde tıklama işlemi
           markedDates={{
             [selectedDate]: {
               selected: true,
@@ -140,14 +183,18 @@ const HomeScreen = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={[styles.scrollContent, { paddingRight: 45 }]}
           >
-            {MANAGEMENT_MENU.map((item, index) => (
-              <ManagementCard
-                key={index}
-                btnName={item.btnName}
-                iconName={item.iconName}
-                onPress={() => navigation.navigate(item.screenName)}
-              />
-            ))}
+            {MANAGEMENT_MENU.map((item, index) => {
+              const IconComponent = getIconComponent(item.iconType);
+              return (
+                <ManagementCard
+                  key={index}
+                  btnName={item.btnName}
+                  iconName={item.iconName}
+                  onPress={() => navigation.navigate(item.screenName)}
+                  IconComponent={IconComponent}
+                />
+              );
+            })}
           </ScrollView>
         </View>
 
@@ -193,12 +240,13 @@ const HomeScreen = () => {
             ))}
           </View>
         </View>
+
         <View style={styles.mealListContainer}>
           <Text style={styles.title}>Meal List</Text>
           <View style={styles.mealListInnerContainer}>
-            <MealCard mealTime={"Breakfast"} />
-            <MealCard mealTime={"Lunch"} />
-            <MealCard mealTime={"Dinner"} />
+            <MealCard mealTime={"Breakfast"} mealPlan={meals.breakfast} />
+            <MealCard mealTime={"Lunch"} mealPlan={meals.lunch} />
+            <MealCard mealTime={"Dinner"} mealPlan={meals.dinner} />
           </View>
         </View>
       </ScrollView>
