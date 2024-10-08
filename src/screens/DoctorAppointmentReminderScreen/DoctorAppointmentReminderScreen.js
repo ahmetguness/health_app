@@ -287,7 +287,7 @@ export default function DoctorAppointmentReminderScreen() {
                 Time: {appointment.time.toLocaleTimeString()}
               </Text>
               <Text style={styles.cardText}>
-                Notify: {appointment.daysBeforeNotification} days before
+                Notify: {appointment.daysBeforeNotification} day(s) before
               </Text>
             </View>
             <View style={styles.iconContainer}>

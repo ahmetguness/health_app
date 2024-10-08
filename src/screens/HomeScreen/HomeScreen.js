@@ -13,13 +13,11 @@ import ManagementCard from "../../components/cards/ManagementCard";
 import { styles } from "./styles";
 import { daysOfWeek, MANAGEMENT_MENU, monthsOfYear } from "../../data/data";
 import { COLORS } from "../../theme/colors";
-// import  from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MealCard from "../../components/cards/MealCard";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -42,8 +40,9 @@ const HomeScreen = () => {
     lunch: "",
     dinner: "",
   });
+  const [appointments, setAppointments] = useState([]);
+  const [medications, setMedications] = useState([]);
 
-  // Kullanıcının bilgilerini yüklüyoruz
   const loadUserData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("@user_info");
@@ -55,13 +54,12 @@ const HomeScreen = () => {
     }
   };
 
-  // Bugünkü günün yemek planını yüklüyoruz (ilk açılışta)
   const loadMealsForToday = useCallback(async () => {
     try {
       const storedMeals = await AsyncStorage.getItem("meals");
       if (storedMeals) {
         const allMeals = JSON.parse(storedMeals);
-        const todayDay = new Date().getDay(); // Bugünün günü (0 = Pazar, 6 = Cumartesi)
+        const todayDay = new Date().getDay();
         if (allMeals[todayDay]) {
           setMeals(allMeals[todayDay]);
         }
@@ -71,16 +69,46 @@ const HomeScreen = () => {
     }
   }, []);
 
+  const loadAppointmentsForDate = useCallback(async (selectedDate) => {
+    try {
+      const storedAppointments = await AsyncStorage.getItem("appointments");
+      if (storedAppointments) {
+        const allAppointments = JSON.parse(storedAppointments);
+        const filteredAppointments = allAppointments.filter(
+          (appointment) => appointment.date.split("T")[0] === selectedDate
+        );
+        setAppointments(filteredAppointments);
+      }
+    } catch (error) {
+      console.error("Error loading appointments:", error);
+    }
+  }, []);
+
+  const loadMedicationsForDate = useCallback(async (selectedDate) => {
+    try {
+      const storedMedications = await AsyncStorage.getItem("medications");
+      if (storedMedications) {
+        const allMedications = JSON.parse(storedMedications);
+        const dayOfWeekIndex = new Date(selectedDate).getDay();
+        const filteredMedications = allMedications.filter(
+          (medication) => medication.selectedDays[dayOfWeekIndex]
+        );
+        setMedications(filteredMedications);
+      }
+    } catch (error) {
+      console.error("Error loading medications:", error);
+    }
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       loadUserData();
       const todayDayOfWeek = daysOfWeek[new Date().getDay()];
-      setDayOfWeek(todayDayOfWeek); // Bugünün gününü ayarla
-      loadMealsForToday(); // Sadece bugünün yemek planını göster
+      setDayOfWeek(todayDayOfWeek);
+      loadMealsForToday();
     }, [loadMealsForToday])
   );
 
-  // BMI hesaplama
   const calculateBMI = useCallback(() => {
     const { weight, height } = userData;
     if (weight && height) {
@@ -91,7 +119,6 @@ const HomeScreen = () => {
     return "N/A";
   }, [userData]);
 
-  // Vücut tipi hesaplama
   const getBodyType = useCallback(() => {
     const bmi = calculateBMI();
     if (bmi === "N/A") return "Unknown";
@@ -105,7 +132,6 @@ const HomeScreen = () => {
     return "Morbidly obese (Class 3)";
   }, [calculateBMI]);
 
-  // Seçilen tarihi formatlama
   const formatSelectedDate = useCallback((dateString) => {
     const selectedDay = new Date(dateString);
     return {
@@ -117,18 +143,20 @@ const HomeScreen = () => {
     };
   }, []);
 
-  // Takvimde tıklanan tarihi göster, meal listi etkileme
   const handleDayPress = useCallback(
     ({ dateString }) => {
       const { formatted } = formatSelectedDate(dateString);
-      setSelectedDate(dateString); // Tıklanan tarihi ayarla
-      setFormattedDate(formatted); // Formatlı tarih modalda gösterilecek
-      setIsModalVisible(true); // Modalı aç
+      setSelectedDate(dateString);
+      setFormattedDate(formatted);
+      setIsModalVisible(true);
+
+      // Randevuları ve ilaçları yükle
+      loadAppointmentsForDate(dateString);
+      loadMedicationsForDate(dateString);
     },
-    [formatSelectedDate]
+    [formatSelectedDate, loadAppointmentsForDate, loadMedicationsForDate]
   );
 
-  // Icon componentini getir
   const getIconComponent = (iconType) => {
     switch (iconType) {
       case "FontAwesome":
@@ -151,7 +179,7 @@ const HomeScreen = () => {
       <View style={styles.calendarContainer}>
         <Calendar
           style={styles.calendar}
-          onDayPress={handleDayPress} // Takvimde tıklama işlemi
+          onDayPress={handleDayPress}
           markedDates={{
             [selectedDate]: {
               selected: true,
@@ -170,6 +198,43 @@ const HomeScreen = () => {
       >
         <View style={styles.modalContainer}>
           <Text>{formattedDate}</Text>
+
+          <Text style={styles.sectionTitle}>Doctor Appointments</Text>
+          {appointments.length > 0 ? (
+            appointments.map((appointment, index) => (
+              <View key={index}>
+                <Text>Doctor: {appointment.doctorName}</Text>
+                <Text>Department: {appointment.department}</Text>
+                <Text>Hospital: {appointment.hospital}</Text>
+                <Text>Note: {appointment.note}</Text>
+                <Text>
+                  Time: {new Date(appointment.time).toLocaleTimeString()}
+                </Text>
+              </View>
+            ))
+          ) : (
+            <Text>No appointments for this date.</Text>
+          )}
+
+          {/* <Text style={styles.sectionTitle}>Meals</Text>
+          <MealCard mealTime={"Breakfast"} mealPlan={meals.breakfast} />
+          <MealCard mealTime={"Lunch"} mealPlan={meals.lunch} />
+          <MealCard mealTime={"Dinner"} mealPlan={meals.dinner} /> */}
+
+          <Text style={styles.sectionTitle}>Medications</Text>
+          {medications.length > 0 ? (
+            medications.map((medication, index) => (
+              <View key={index}>
+                <Text>Medication: {medication.name}</Text>
+                <Text>Description: {medication.description}</Text>
+                <Text>Doses Per Day: {medication.dosesPerDay}</Text>
+                <Text>Times: {medication.doseTimes.join(", ")}</Text>
+              </View>
+            ))
+          ) : (
+            <Text>No medications for this date.</Text>
+          )}
+
           <Button title="Close" onPress={() => setIsModalVisible(false)} />
         </View>
       </Modal>
