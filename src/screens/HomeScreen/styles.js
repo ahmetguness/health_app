@@ -69,4 +69,125 @@ export const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     marginBottom: "5%",
   },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: COLORS.white, // Background color for the modal
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    alignItems: "center",
+    justifyContent: "flex-start", // Align content at the top
+    shadowColor: "#000", // Shadow properties for Android
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // Elevation for iOS
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.carouselBottom,
+    marginTop: 15,
+    marginBottom: 5,
+  },
+  modalText: {
+    fontSize: 16,
+    color: COLORS.black,
+    textAlign: "left",
+  },
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: COLORS.carouselBottom,
+    borderRadius: 10,
+    padding: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: COLORS.white,
+    fontWeight: "bold",
+  },
+  mealCard: {
+    backgroundColor: COLORS.carouselBottom,
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 5,
+    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 3,
+  },
+  appointmentCard: {
+    backgroundColor: COLORS.lightGray, // Use a different color for appointments
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 5,
+    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 3,
+  },
+  medicationCard: {
+    backgroundColor: COLORS.lightGreen, // Use another color for medications
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 5,
+    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 3,
+  },
+  modalContainer: {
+  flex: 1,
+  backgroundColor: COLORS.background, // Background color to match app theme
+  padding: 20,
+  borderTopLeftRadius: 20,
+  borderTopRightRadius: 20,
+  alignItems: "center",
+  justifyContent: "flex-start",
+},
+modalText: {
+  fontSize: 16,
+  color: COLORS.black,
+  marginVertical: 5,
+},
+sectionTitle: {
+  fontSize: 20,
+  fontWeight: "bold",
+  color: COLORS.carouselBottom,
+  marginVertical: 10,
+},
+closeButton: {
+  backgroundColor: COLORS.carouselBottom,
+  borderRadius: 10,
+  padding: 10,
+  alignItems: "center",
+  justifyContent: "center",
+  width: '80%', // Adjust the width for better layout
+  marginTop: 20,
+},
+closeButtonText: {
+  color: COLORS.white,
+  fontWeight: "bold",
+  fontSize: 16,
+},
+
 });

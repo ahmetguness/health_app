@@ -5,7 +5,7 @@ import {
   Dimensions,
   ScrollView,
   Modal,
-  Button,
+  TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Calendar } from "react-native-calendars";
@@ -40,8 +40,43 @@ const HomeScreen = () => {
     lunch: "",
     dinner: "",
   });
+  const [todayMeals, setTodayMeals] = useState({
+    breakfast: "",
+    lunch: "",
+    dinner: "",
+  });
   const [appointments, setAppointments] = useState([]);
   const [medications, setMedications] = useState([]);
+
+  useEffect(() => {
+    const getMealsForToday = async () => {
+      try {
+        const mealsData = await AsyncStorage.getItem("meals");
+
+        if (mealsData !== null) {
+          const meals = JSON.parse(mealsData);
+
+          const tdy = new Date();
+          const dayOfWeekNumber = tdy.getDay();
+          const dayOfWeekName = daysOfWeek[dayOfWeekNumber];
+
+          const mealsForToday = meals[dayOfWeekNumber];
+
+          setTodayMeals({
+            breakfast: mealsForToday.breakfast,
+            lunch: mealsForToday.lunch,
+            dinner: mealsForToday.dinner,
+          });
+        } else {
+          console.log("Yemek verisi bulunamadı.");
+        }
+      } catch (error) {
+        console.error("Async Storage okuma hatası:", error);
+      }
+    };
+
+    getMealsForToday();
+  }, []);
 
   const loadUserData = async () => {
     try {
@@ -75,7 +110,6 @@ const HomeScreen = () => {
       if (storedMeals) {
         const allMeals = JSON.parse(storedMeals);
         const dayOfWeekIndex = new Date(selectedDate).getDay();
-        // Seçilen güne göre yemekleri yükle
         setMeals(
           allMeals[dayOfWeekIndex] || { breakfast: "", lunch: "", dinner: "" }
         );
@@ -159,19 +193,6 @@ const HomeScreen = () => {
     };
   }, []);
 
-  // const handleDayPress = useCallback(
-  //   ({ dateString }) => {
-  //     const { formatted } = formatSelectedDate(dateString);
-  //     setSelectedDate(dateString);
-  //     setFormattedDate(formatted);
-  //     setIsModalVisible(true);
-
-  //     // Randevuları ve ilaçları yükle
-  //     loadAppointmentsForDate(dateString);
-  //     loadMedicationsForDate(dateString);
-  //   },
-  //   [formatSelectedDate, loadAppointmentsForDate, loadMedicationsForDate]
-  // );
   const handleDayPress = useCallback(
     ({ dateString }) => {
       const { formatted } = formatSelectedDate(dateString);
@@ -179,14 +200,12 @@ const HomeScreen = () => {
       setFormattedDate(formatted);
       setIsModalVisible(true);
 
-      // Gün ismini bul ve konsola yazdır
       const dayOfWeekName = daysOfWeek[new Date(dateString).getDay()];
-      console.log(`Selected day: ${dayOfWeekName}`); // Konsola gün ismini yazdır
+      console.log(`Selected day: ${dayOfWeekName}`);
 
-      // Randevuları, ilaçları ve yemekleri yükle
       loadAppointmentsForDate(dateString);
       loadMedicationsForDate(dateString);
-      loadMealsForDate(dateString); // Seçilen gün için yemekleri yükle
+      loadMealsForDate(dateString);
     },
     [
       formatSelectedDate,
@@ -236,53 +255,84 @@ const HomeScreen = () => {
         onRequestClose={() => setIsModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <Text>{formattedDate}</Text>
+          <Text style={styles.modalText}>{formattedDate}</Text>
 
           <Text style={styles.sectionTitle}>Meals</Text>
           {meals.breakfast || meals.lunch || meals.dinner ? (
-            <View>
-              {meals.breakfast ? (
-                <Text>Breakfast: {meals.breakfast}</Text>
-              ) : null}
-              {meals.lunch ? <Text>Lunch: {meals.lunch}</Text> : null}
-              {meals.dinner ? <Text>Dinner: {meals.dinner}</Text> : null}
+            <View style={{ width: "100%" }}>
+              {meals.breakfast && (
+                <View style={styles.mealCard}>
+                  <Text style={styles.modalText}>
+                    Breakfast: {meals.breakfast}
+                  </Text>
+                </View>
+              )}
+              {meals.lunch && (
+                <View style={styles.mealCard}>
+                  <Text style={styles.modalText}>Lunch: {meals.lunch}</Text>
+                </View>
+              )}
+              {meals.dinner && (
+                <View style={styles.mealCard}>
+                  <Text style={styles.modalText}>Dinner: {meals.dinner}</Text>
+                </View>
+              )}
             </View>
           ) : (
-            <Text>No meals for this date.</Text>
+            <Text style={styles.modalText}>No meals for this date.</Text>
           )}
 
           <Text style={styles.sectionTitle}>Doctor Appointments</Text>
           {appointments.length > 0 ? (
             appointments.map((appointment, index) => (
-              <View key={index}>
-                <Text>Doctor: {appointment.doctorName}</Text>
-                <Text>Department: {appointment.department}</Text>
-                <Text>Hospital: {appointment.hospital}</Text>
-                <Text>Note: {appointment.note}</Text>
-                <Text>
+              <View key={index} style={styles.appointmentCard}>
+                <Text style={styles.modalText}>
+                  Doctor: {appointment.doctorName}
+                </Text>
+                <Text style={styles.modalText}>
+                  Department: {appointment.department}
+                </Text>
+                <Text style={styles.modalText}>
+                  Hospital: {appointment.hospital}
+                </Text>
+                <Text style={styles.modalText}>Note: {appointment.note}</Text>
+                <Text style={styles.modalText}>
                   Time: {new Date(appointment.time).toLocaleTimeString()}
                 </Text>
               </View>
             ))
           ) : (
-            <Text>No appointments for this date.</Text>
+            <Text style={styles.modalText}>No appointments for this date.</Text>
           )}
 
           <Text style={styles.sectionTitle}>Medications</Text>
           {medications.length > 0 ? (
             medications.map((medication, index) => (
-              <View key={index}>
-                <Text>Medication: {medication.name}</Text>
-                <Text>Description: {medication.description}</Text>
-                <Text>Doses Per Day: {medication.dosesPerDay}</Text>
-                <Text>Times: {medication.doseTimes.join(", ")}</Text>
+              <View key={index} style={styles.medicationCard}>
+                <Text style={styles.modalText}>
+                  Medication: {medication.name}
+                </Text>
+                <Text style={styles.modalText}>
+                  Description: {medication.description}
+                </Text>
+                <Text style={styles.modalText}>
+                  Doses Per Day: {medication.dosesPerDay}
+                </Text>
+                <Text style={styles.modalText}>
+                  Times: {medication.doseTimes.join(", ")}
+                </Text>
               </View>
             ))
           ) : (
-            <Text>No medications for this date.</Text>
+            <Text style={styles.modalText}>No medications for this date.</Text>
           )}
 
-          <Button title="Close" onPress={() => setIsModalVisible(false)} />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setIsModalVisible(false)}
+          >
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
 
@@ -356,9 +406,9 @@ const HomeScreen = () => {
         <View style={styles.mealListContainer}>
           <Text style={styles.title}>Meal List</Text>
           <View style={styles.mealListInnerContainer}>
-            <MealCard mealTime={"Breakfast"} mealPlan={meals.breakfast} />
-            <MealCard mealTime={"Lunch"} mealPlan={meals.lunch} />
-            <MealCard mealTime={"Dinner"} mealPlan={meals.dinner} />
+            <MealCard mealTime={"Breakfast"} mealPlan={todayMeals.breakfast} />
+            <MealCard mealTime={"Lunch"} mealPlan={todayMeals.lunch} />
+            <MealCard mealTime={"Dinner"} mealPlan={todayMeals.dinner} />
           </View>
         </View>
       </ScrollView>
