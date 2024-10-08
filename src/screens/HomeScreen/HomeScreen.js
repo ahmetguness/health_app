@@ -69,6 +69,22 @@ const HomeScreen = () => {
     }
   }, []);
 
+  const loadMealsForDate = useCallback(async (selectedDate) => {
+    try {
+      const storedMeals = await AsyncStorage.getItem("meals");
+      if (storedMeals) {
+        const allMeals = JSON.parse(storedMeals);
+        const dayOfWeekIndex = new Date(selectedDate).getDay();
+        // Seçilen güne göre yemekleri yükle
+        setMeals(
+          allMeals[dayOfWeekIndex] || { breakfast: "", lunch: "", dinner: "" }
+        );
+      }
+    } catch (error) {
+      console.error("Error loading meals:", error);
+    }
+  }, []);
+
   const loadAppointmentsForDate = useCallback(async (selectedDate) => {
     try {
       const storedAppointments = await AsyncStorage.getItem("appointments");
@@ -143,6 +159,19 @@ const HomeScreen = () => {
     };
   }, []);
 
+  // const handleDayPress = useCallback(
+  //   ({ dateString }) => {
+  //     const { formatted } = formatSelectedDate(dateString);
+  //     setSelectedDate(dateString);
+  //     setFormattedDate(formatted);
+  //     setIsModalVisible(true);
+
+  //     // Randevuları ve ilaçları yükle
+  //     loadAppointmentsForDate(dateString);
+  //     loadMedicationsForDate(dateString);
+  //   },
+  //   [formatSelectedDate, loadAppointmentsForDate, loadMedicationsForDate]
+  // );
   const handleDayPress = useCallback(
     ({ dateString }) => {
       const { formatted } = formatSelectedDate(dateString);
@@ -150,11 +179,21 @@ const HomeScreen = () => {
       setFormattedDate(formatted);
       setIsModalVisible(true);
 
-      // Randevuları ve ilaçları yükle
+      // Gün ismini bul ve konsola yazdır
+      const dayOfWeekName = daysOfWeek[new Date(dateString).getDay()];
+      console.log(`Selected day: ${dayOfWeekName}`); // Konsola gün ismini yazdır
+
+      // Randevuları, ilaçları ve yemekleri yükle
       loadAppointmentsForDate(dateString);
       loadMedicationsForDate(dateString);
+      loadMealsForDate(dateString); // Seçilen gün için yemekleri yükle
     },
-    [formatSelectedDate, loadAppointmentsForDate, loadMedicationsForDate]
+    [
+      formatSelectedDate,
+      loadAppointmentsForDate,
+      loadMedicationsForDate,
+      loadMealsForDate,
+    ]
   );
 
   const getIconComponent = (iconType) => {
@@ -199,6 +238,19 @@ const HomeScreen = () => {
         <View style={styles.modalContainer}>
           <Text>{formattedDate}</Text>
 
+          <Text style={styles.sectionTitle}>Meals</Text>
+          {meals.breakfast || meals.lunch || meals.dinner ? (
+            <View>
+              {meals.breakfast ? (
+                <Text>Breakfast: {meals.breakfast}</Text>
+              ) : null}
+              {meals.lunch ? <Text>Lunch: {meals.lunch}</Text> : null}
+              {meals.dinner ? <Text>Dinner: {meals.dinner}</Text> : null}
+            </View>
+          ) : (
+            <Text>No meals for this date.</Text>
+          )}
+
           <Text style={styles.sectionTitle}>Doctor Appointments</Text>
           {appointments.length > 0 ? (
             appointments.map((appointment, index) => (
@@ -215,11 +267,6 @@ const HomeScreen = () => {
           ) : (
             <Text>No appointments for this date.</Text>
           )}
-
-          {/* <Text style={styles.sectionTitle}>Meals</Text>
-          <MealCard mealTime={"Breakfast"} mealPlan={meals.breakfast} />
-          <MealCard mealTime={"Lunch"} mealPlan={meals.lunch} />
-          <MealCard mealTime={"Dinner"} mealPlan={meals.dinner} /> */}
 
           <Text style={styles.sectionTitle}>Medications</Text>
           {medications.length > 0 ? (
