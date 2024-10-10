@@ -10,12 +10,11 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Picker } from "@react-native-picker/picker"; // Import Picker
+import { Picker } from "@react-native-picker/picker";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
 import NavbarContainer from "../../components/navbar/NavbarContainer";
 import { styles } from "./styles";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import Entypo from "@expo/vector-icons/Entypo";
 
 export default function DoctorAppointmentReminderScreen() {
   const { height } = Dimensions.get("window");
@@ -30,7 +29,7 @@ export default function DoctorAppointmentReminderScreen() {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [appointments, setAppointments] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [daysBeforeNotification, setDaysBeforeNotification] = useState(1); // New state
+  const [daysBeforeNotification, setDaysBeforeNotification] = useState(1);
 
   useEffect(() => {
     const loadAppointments = async () => {
@@ -65,7 +64,7 @@ export default function DoctorAppointmentReminderScreen() {
     setNote("");
     setSelectedDate(new Date());
     setSelectedTime(new Date());
-    setDaysBeforeNotification(1); // Reset the picker
+    setDaysBeforeNotification(1);
     setEditingIndex(null);
   };
 
@@ -98,7 +97,7 @@ export default function DoctorAppointmentReminderScreen() {
       note,
       date: selectedDate,
       time: selectedTime,
-      daysBeforeNotification, // Include the selected notification days
+      daysBeforeNotification,
     };
 
     let updatedAppointments;
@@ -134,7 +133,7 @@ export default function DoctorAppointmentReminderScreen() {
     setNote(appointment.note);
     setSelectedDate(appointment.date);
     setSelectedTime(appointment.time);
-    setDaysBeforeNotification(appointment.daysBeforeNotification || 1); // Set the picker value
+    setDaysBeforeNotification(appointment.daysBeforeNotification || 1);
     setIsModalVisible(true);
     setEditingIndex(index);
   };
@@ -186,7 +185,6 @@ export default function DoctorAppointmentReminderScreen() {
             placeholderTextColor="#888"
           />
 
-          {/* Date Picker */}
           <View
             style={{
               justifyContent: "center",
@@ -212,7 +210,6 @@ export default function DoctorAppointmentReminderScreen() {
             />
           )}
 
-          {/* Time Picker */}
           <View
             style={{
               justifyContent: "center",
@@ -239,7 +236,6 @@ export default function DoctorAppointmentReminderScreen() {
             />
           )}
 
-          {/* Days Before Notification Picker */}
           <Text style={styles.label}>Notify Me Before (Days):</Text>
           <Picker
             selectedValue={daysBeforeNotification}
