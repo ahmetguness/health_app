@@ -10,6 +10,7 @@ export default function MedicineCard({
   doseTimes,
   selectedDays,
   onDelete,
+  onEdit,
 }) {
   return (
     <View style={styles.card}>
@@ -32,6 +33,9 @@ export default function MedicineCard({
         </View>
         <TouchableOpacity onPress={onDelete}>
           <Icon name="delete" size={30} color="#DC3545" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onEdit}>
+          <Icon name="edit" size={30} color="green" />
         </TouchableOpacity>
       </View>
     </View>

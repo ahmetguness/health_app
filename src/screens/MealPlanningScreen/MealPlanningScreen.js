@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Dimensions,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput, Dimensions, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavbarContainer from "../../components/navbar/NavbarContainer";
 import { daysOfWeek } from "../../data/data";
@@ -55,7 +48,6 @@ const MealPlanningScreen = () => {
   const saveMeals = async (mealData) => {
     try {
       await AsyncStorage.setItem("meals", JSON.stringify(mealData));
-      // Kaydetme başarılı olduğunda alert göster
       Alert.alert("Success", "Meals saved successfully!");
     } catch (error) {
       console.error("Failed to save meals:", error);
@@ -75,6 +67,8 @@ const MealPlanningScreen = () => {
   );
 
   useEffect(() => {
+    const today = new Date().getDay();
+    setSelectedDay(daysOfWeek[today]);
     loadMeals();
   }, []);
 

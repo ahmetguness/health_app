@@ -4,10 +4,9 @@ import {
   Dimensions,
   Text,
   Modal,
-  Button,
   TextInput,
   ScrollView,
-  StyleSheet,
+  Button,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -28,9 +27,8 @@ export default function MedicationReminderScreen() {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [selectedDays, setSelectedDays] = useState(new Array(7).fill(false));
-  const [editingIndex, setEditingIndex] = useState(null); // Eklenen state
-
   const [medications, setMedications] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null);
 
   useEffect(() => {
     const loadMedications = async () => {
@@ -52,44 +50,6 @@ export default function MedicationReminderScreen() {
     loadMedications();
   }, []);
 
-  const handleAddPress = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    setMedicationName("");
-    setMedicationDescription("");
-    setDosesPerDay(1);
-    setDoseTimes([]);
-    setSelectedDays(new Array(7).fill(false));
-    setEditingIndex(null); // Reset editing index
-  };
-
-  const handleTimePick = (event, selectedDate) => {
-    const currentDate = selectedDate || selectedTime;
-    setShowTimePicker(false);
-
-    if (editingIndex !== null) {
-      // Düzenleme modu için
-      const updatedDoseTimes = [...doseTimes];
-      updatedDoseTimes[editingIndex] = currentDate; // Seçilen zaman güncellenir
-      setDoseTimes(updatedDoseTimes);
-      setEditingIndex(null); // Edit modundan çıkılır
-    } else if (doseTimes.length < dosesPerDay) {
-      setSelectedTime(currentDate);
-      setDoseTimes([...doseTimes, currentDate]);
-    } else {
-      alert(`You can only select ${dosesPerDay} time(s) for this medication.`);
-    }
-  };
-
-  const toggleDaySelection = (index) => {
-    const updatedDays = [...selectedDays];
-    updatedDays[index] = !updatedDays[index];
-    setSelectedDays(updatedDays);
-  };
-
   const handleSaveMedication = async () => {
     if (medicationName.trim() === "") {
       alert("Please enter a medication name.");
@@ -104,13 +64,41 @@ export default function MedicationReminderScreen() {
       selectedDays,
     };
 
-    const updatedMedications = [...medications, newMedication];
+    let updatedMedications;
+    if (editingIndex !== null) {
+      updatedMedications = [...medications];
+      updatedMedications[editingIndex] = newMedication;
+    } else {
+      updatedMedications = [...medications, newMedication];
+    }
+
     setMedications(updatedMedications);
     await AsyncStorage.setItem(
       "medications",
       JSON.stringify(updatedMedications)
     );
     handleCloseModal();
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setMedicationName("");
+    setMedicationDescription("");
+    setDosesPerDay(1);
+    setDoseTimes([]);
+    setSelectedDays(new Array(7).fill(false));
+    setEditingIndex(null);
+  };
+
+  const handleEditMedication = (index) => {
+    const medication = medications[index];
+    setMedicationName(medication.name);
+    setMedicationDescription(medication.description);
+    setDosesPerDay(medication.dosesPerDay);
+    setDoseTimes(medication.doseTimes);
+    setSelectedDays(medication.selectedDays);
+    setIsModalVisible(true);
+    setEditingIndex(index);
   };
 
   const handleDeleteMedication = async (index) => {
@@ -122,13 +110,32 @@ export default function MedicationReminderScreen() {
     );
   };
 
+  const handleTimePick = (event, selectedDate) => {
+    const currentDate = selectedDate || selectedTime;
+    setShowTimePicker(false);
+
+    if (doseTimes.length < dosesPerDay) {
+      setSelectedTime(currentDate);
+      setDoseTimes([...doseTimes, currentDate]);
+    } else {
+      alert(`You can only select ${dosesPerDay} time(s) for this medication.`);
+    }
+  };
+
+  const toggleDaySelection = (index) => {
+    const updatedDays = [...selectedDays];
+    updatedDays[index] = !updatedDays[index];
+    setSelectedDays(updatedDays);
+  };
+
   return (
     <View style={styles.root}>
       <NavbarContainer
         title={"Medication Reminder"}
         style={{ height: height * 0.06 }}
-        onPressToAdd={handleAddPress}
+        onPressToAdd={() => setIsModalVisible(true)}
       />
+
       <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContent}>
           <Text style={styles.title}>Medication Reminder</Text>
@@ -177,23 +184,12 @@ export default function MedicationReminderScreen() {
           </ScrollView>
 
           {doseTimes.map((time, index) => (
-            <View
-              key={index}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: "3%",
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-              }}
-            >
+            <View key={index} style={styles.timeContainer}>
               <SecondaryButton
                 title="Edit Time"
                 onPress={() => {
-                  setEditingIndex(index);
                   setShowTimePicker(true);
                 }}
-                style={{ height: height * 0.05 }}
               />
               <Text style={styles.timeText}>
                 Selected Time: {time.toLocaleTimeString()}
@@ -201,19 +197,10 @@ export default function MedicationReminderScreen() {
             </View>
           ))}
 
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <SecondaryButton
-              title="Select Time"
-              onPress={() => setShowTimePicker(true)}
-              style={{ height: height * 0.05, width: "100%" }}
-            />
-          </View>
+          <SecondaryButton
+            title="Select Time"
+            onPress={() => setShowTimePicker(true)}
+          />
           {showTimePicker && (
             <DateTimePicker
               value={selectedTime}
@@ -225,11 +212,7 @@ export default function MedicationReminderScreen() {
           )}
 
           <View style={styles.buttonContainer}>
-            <SecondaryButton
-              title="Save"
-              onPress={handleSaveMedication}
-              style={{ height: height * 0.05 }}
-            />
+            <SecondaryButton title="Save" onPress={handleSaveMedication} />
             <SecondaryButton title="Close" onPress={handleCloseModal} />
           </View>
         </View>
@@ -237,15 +220,17 @@ export default function MedicationReminderScreen() {
 
       <ScrollView>
         {medications.map((medication, index) => (
-          <MedicineCard
-            key={index}
-            name={medication.name}
-            description={medication.description}
-            dosesPerDay={medication.dosesPerDay}
-            doseTimes={medication.doseTimes}
-            selectedDays={medication.selectedDays}
-            onDelete={() => handleDeleteMedication(index)}
-          />
+          <View key={index}>
+            <MedicineCard
+              name={medication.name}
+              description={medication.description}
+              dosesPerDay={medication.dosesPerDay}
+              doseTimes={medication.doseTimes}
+              selectedDays={medication.selectedDays}
+              onEdit={() => handleEditMedication(index)}
+              onDelete={() => handleDeleteMedication(index)}
+            />
+          </View>
         ))}
       </ScrollView>
     </View>

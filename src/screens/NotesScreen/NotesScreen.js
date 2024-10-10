@@ -107,13 +107,13 @@ export default function NotesScreen() {
           <View style={[styles.modalContent, { width: "90%" }]}>
             <TextInput
               style={styles.titleInput}
-              placeholder="Başlık girin"
+              placeholder="Enter Title"
               value={title}
               onChangeText={(text) => setTitle(text)}
             />
             <TextInput
               style={styles.input}
-              placeholder="Notunuzu buraya yazın"
+              placeholder="Write your note here"
               value={note}
               onChangeText={(text) => setNote(text)}
               multiline={true}
@@ -122,13 +122,13 @@ export default function NotesScreen() {
             />
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.saveButton} onPress={saveNote}>
-                <Text style={styles.buttonText}>Kaydet</Text>
+                <Text style={styles.buttonText}>Save</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.buttonText}>Kapat</Text>
+                <Text style={styles.buttonText}>Close</Text>
               </TouchableOpacity>
             </View>
           </View>

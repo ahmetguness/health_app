@@ -76,7 +76,7 @@ const HomeScreen = () => {
     };
 
     getMealsForToday();
-  }, []);
+  }, [todayMeals]);
 
   const loadUserData = async () => {
     try {
@@ -401,7 +401,7 @@ const HomeScreen = () => {
         </View>
 
         <View style={styles.mealListContainer}>
-          <Text style={styles.title}>Meal List</Text>
+          <Text style={styles.title}>Today's Food List</Text>
           <View style={styles.mealListInnerContainer}>
             <MealCard mealTime={"Breakfast"} mealPlan={todayMeals.breakfast} />
             <MealCard mealTime={"Lunch"} mealPlan={todayMeals.lunch} />
