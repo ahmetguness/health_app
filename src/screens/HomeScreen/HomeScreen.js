@@ -200,9 +200,6 @@ const HomeScreen = () => {
       setFormattedDate(formatted);
       setIsModalVisible(true);
 
-      const dayOfWeekName = daysOfWeek[new Date(dateString).getDay()];
-      console.log(`Selected day: ${dayOfWeekName}`);
-
       loadAppointmentsForDate(dateString);
       loadMedicationsForDate(dateString);
       loadMealsForDate(dateString);
