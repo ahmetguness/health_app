@@ -11,6 +11,9 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
+import { useSelector } from "react-redux";
+import en from "../../locales/en.json";
+import tr from "../../locales/tr.json";
 
 const InputField = ({ label, value, onChange, placeholder }) => (
   <View style={styles.inputField}>
@@ -48,6 +51,9 @@ export default function InformationScreen() {
   const [weight, setWeight] = useState("");
   const [gender, setGender] = useState("");
   const [height, setHeight] = useState("");
+  const lan = useSelector((state) => state.lan.lan);
+
+  const localizedData = lan === "en" ? en : tr;
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -71,8 +77,16 @@ export default function InformationScreen() {
 
   const titleText =
     name === ""
-      ? ["Please", "Enter the required information", "Submit Information"]
-      : ["Update", "Your Information", "Save Changes"];
+      ? [
+          localizedData.please,
+          localizedData.enterTheRequiredInformation,
+          localizedData.submitInformationButton,
+        ]
+      : [
+          localizedData.updateText1,
+          localizedData.updateText2,
+          localizedData.saveChangesButton,
+        ];
 
   const handleAgeChange = useCallback((itemValue) => setAge(itemValue), []);
   const handleWeightChange = useCallback(
@@ -122,31 +136,31 @@ export default function InformationScreen() {
       </View>
       <View style={styles.inputContainer}>
         <InputField
-          label="Name"
+          label={localizedData.name}
           value={name}
           onChange={setName}
           placeholder="Enter your name"
         />
         <PickerField
-          label="Age"
+          label={localizedData.age}
           selectedValue={age}
           onValueChange={handleAgeChange}
           items={ageItems}
         />
         <PickerField
-          label="Weight"
+          label={localizedData.weight}
           selectedValue={weight}
           onValueChange={handleWeightChange}
           items={weightItems}
         />
         <PickerField
-          label="Height"
+          label={localizedData.height}
           selectedValue={height}
           onValueChange={handleHeightChange}
           items={heightItems}
         />
         <PickerField
-          label="Gender"
+          label={localizedData.gender}
           selectedValue={gender}
           onValueChange={handleGenderChange}
           items={genderItems}
@@ -162,7 +176,7 @@ export default function InformationScreen() {
         <SecondaryButton
           title={titleText[2]}
           onPress={handleNext}
-          style={{ height: 50 }} // Buton yüksekliği sabitlenmiş
+          style={{ height: 50 }}
         />
       </View>
     </View>

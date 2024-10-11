@@ -18,6 +18,9 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MealCard from "../../components/cards/MealCard";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import en from "../../locales/en.json";
+import tr from "../../locales/tr.json";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -47,6 +50,8 @@ const HomeScreen = () => {
   });
   const [appointments, setAppointments] = useState([]);
   const [medications, setMedications] = useState([]);
+  const lan = useSelector((state) => state.lan.lan);
+  const localizedData = lan === "en" ? en : tr;
 
   useEffect(() => {
     const getMealsForToday = async () => {
@@ -104,20 +109,23 @@ const HomeScreen = () => {
     }
   }, []);
 
-  const loadMealsForDate = useCallback(async (selectedDate) => {
-    try {
-      const storedMeals = await AsyncStorage.getItem("meals");
-      if (storedMeals) {
-        const allMeals = JSON.parse(storedMeals);
-        const dayOfWeekIndex = new Date(selectedDate).getDay();
-        setMeals(
-          allMeals[dayOfWeekIndex] || { breakfast: "", lunch: "", dinner: "" }
-        );
+  const loadMealsForDate = useCallback(
+    async (selectedDate) => {
+      try {
+        const storedMeals = await AsyncStorage.getItem("meals");
+        if (storedMeals) {
+          const allMeals = JSON.parse(storedMeals);
+          const dayOfWeekIndex = new Date(selectedDate).getDay();
+          setMeals(
+            allMeals[dayOfWeekIndex] || { breakfast: "", lunch: "", dinner: "" }
+          );
+        }
+      } catch (error) {
+        console.error("Error loading meals:", error);
       }
-    } catch (error) {
-      console.error("Error loading meals:", error);
-    }
-  }, [meals]);
+    },
+    [meals]
+  );
 
   const loadAppointmentsForDate = useCallback(async (selectedDate) => {
     try {
@@ -228,7 +236,9 @@ const HomeScreen = () => {
   return (
     <View style={styles.root}>
       <View style={[styles.navbar, { height: height * 0.06 }]}>
-        <Text style={styles.navbarText}>Hello {userData.name}!</Text>
+        <Text style={styles.navbarText}>
+          {localizedData.hello} {userData.name}!
+        </Text>
       </View>
 
       <View style={styles.calendarContainer}>
@@ -347,7 +357,7 @@ const HomeScreen = () => {
               return (
                 <ManagementCard
                   key={index}
-                  btnName={item.btnName}
+                  btnName={localizedData[item.btnName]}
                   iconName={item.iconName}
                   onPress={() => navigation.navigate(item.screenName)}
                   IconComponent={IconComponent}

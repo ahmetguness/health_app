@@ -3,15 +3,15 @@ export const APP_NAME = "HealthTrackerApp";
 export const CAROUSEL_DATA = [
   {
     imgName: "food",
-    desc: "Track your meals and maintain a healthy diet with personalized meal planning.",
+    desc: "desc1",
   },
   {
     imgName: "pill",
-    desc: "Keep your health on track with regular medication reminders, ensuring you never skip a dose.",
+    desc: "desc2",
   },
   {
     imgName: "sport",
-    desc: "Stay healthy and strong by prioritizing good nutrition, regular activity, and self-care.",
+    desc: "desc3",
   },
 ];
 
@@ -45,31 +45,31 @@ export const heightItems = Array.from({ length: 61 }, (_, i) => {
 
 export const MANAGEMENT_MENU = [
   {
-    btnName: "Change Personal Information",
+    btnName: "changePersonalInformation",
     iconType: "FontAwesome",
     iconName: "user",
     screenName: "InformationScreen",
   },
   {
-    btnName: "Set Medication Reminders",
+    btnName: "setMedicationReminders",
     iconType: "FontAwesome",
     iconName: "medkit",
     screenName: "MedicationReminderScreen",
   },
   {
-    btnName: "Meal Planning",
+    btnName: "mealPlanning",
     iconType: "FontAwesome",
     iconName: "cutlery",
     screenName: "MealPlanningScreen",
   },
   {
-    btnName: "Doctor Appointment Reminders",
+    btnName: "doctorAppointmentReminders",
     iconType: "FontAwesome",
     iconName: "calendar",
     screenName: "DoctorAppointmentReminderScreen",
   },
   {
-    btnName: "Notes",
+    btnName: "notes",
     iconType: "FontAwesome",
     iconName: "sticky-note",
     screenName: "NotesScreen",
