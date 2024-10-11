@@ -46,7 +46,7 @@ const IntroScreen = () => {
         <Text style={styles.titleText}>Welcome to {APP_NAME}</Text>
       </View>
       <Carousel
-        style={[styles.carousel, { height: height * 0.8 }]}
+        style={[styles.carousel, { height: height * 0.6 }]}
         loop
         autoPlay
         autoPlayInterval={5000}

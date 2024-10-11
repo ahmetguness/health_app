@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, Button, Alert, TextInput } from "react-native";
+import { View, Text, Alert, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { styles } from "./styles";
 import {
@@ -11,7 +11,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
-import jsxRuntime from "react/jsx-runtime";
 
 const InputField = ({ label, value, onChange, placeholder }) => (
   <View style={styles.inputField}>
@@ -73,32 +72,30 @@ export default function InformationScreen() {
   const titleText =
     name === ""
       ? ["Please", "Enter the required information", "Submit Information"]
-      : ["Update ", "Your Information", "Save Changes"];
+      : ["Update", "Your Information", "Save Changes"];
 
-  const handleAgeChange = useCallback((itemValue) => {
-    setAge(itemValue);
-  }, []);
-
-  const handleWeightChange = useCallback((itemValue) => {
-    setWeight(itemValue);
-  }, []);
-
-  const handleGenderChange = useCallback((itemValue) => {
-    setGender(itemValue);
-  }, []);
-
-  const handleHeightChange = useCallback((itemValue) => {
-    setHeight(itemValue);
-  }, []);
+  const handleAgeChange = useCallback((itemValue) => setAge(itemValue), []);
+  const handleWeightChange = useCallback(
+    (itemValue) => setWeight(itemValue),
+    []
+  );
+  const handleGenderChange = useCallback(
+    (itemValue) => setGender(itemValue),
+    []
+  );
+  const handleHeightChange = useCallback(
+    (itemValue) => setHeight(itemValue),
+    []
+  );
 
   const saveDataToStorage = async () => {
     try {
       const userInfo = JSON.stringify({
-        name: name,
-        age: age,
-        weight: weight,
-        gender: gender,
-        height: height,
+        name,
+        age,
+        weight,
+        gender,
+        height,
       });
       await AsyncStorage.setItem("@user_info", userInfo);
       console.log("Data saved successfully.");
@@ -108,13 +105,7 @@ export default function InformationScreen() {
   };
 
   const handleNext = async () => {
-    if (
-      name === "" ||
-      gender === "" ||
-      age === "" ||
-      weight === "" ||
-      height === ""
-    ) {
+    if (!name || !gender || !age || !weight || !height) {
       Alert.alert("Error", "Please fill out all fields.");
     } else {
       console.log({ name, age, weight, gender, height });
@@ -171,7 +162,7 @@ export default function InformationScreen() {
         <SecondaryButton
           title={titleText[2]}
           onPress={handleNext}
-          style={{ height: height * 0.24 }}
+          style={{ height: 50 }} // Buton yüksekliği sabitlenmiş
         />
       </View>
     </View>

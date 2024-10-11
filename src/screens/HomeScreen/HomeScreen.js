@@ -117,7 +117,7 @@ const HomeScreen = () => {
     } catch (error) {
       console.error("Error loading meals:", error);
     }
-  }, []);
+  }, [meals]);
 
   const loadAppointmentsForDate = useCallback(async (selectedDate) => {
     try {

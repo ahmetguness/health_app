@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: "6%",
+    marginTop: "4%",
   },
   titleText: {
     fontWeight: "bold",
@@ -24,6 +25,7 @@ export const styles = StyleSheet.create({
   },
   carousel: {
     overflow: "hidden",
+    flex: 1,
   },
   btnContainer: {
     justifyContent: "center",

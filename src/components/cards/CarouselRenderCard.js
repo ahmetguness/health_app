@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   image: {
-    width: 240,
-    height: 240,
+    width: 220,
+    height: 220,
     borderRadius: 20,
     marginBottom: 10,
     resizeMode: "contain",
