@@ -6,6 +6,9 @@ import { daysOfWeek } from "../../data/data";
 import { Picker } from "@react-native-picker/picker";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
 import { styles } from "./styles";
+import en from "../../locales/en.json";
+import tr from "../../locales/tr.json";
+import { useSelector } from "react-redux";
 
 const MealInput = ({ label, value, onChangeText, onSubmitEditing }) => (
   <>
@@ -23,6 +26,8 @@ const MealInput = ({ label, value, onChangeText, onSubmitEditing }) => (
 );
 
 const MealPlanningScreen = () => {
+  const lan = useSelector((state) => state.lan.lan);
+  const localizedData = lan === "en" ? en : tr;
   const { height } = Dimensions.get("window");
 
   const [selectedDay, setSelectedDay] = useState(daysOfWeek[0]);
@@ -75,13 +80,13 @@ const MealPlanningScreen = () => {
   return (
     <View style={styles.root}>
       <NavbarContainer
-        title="Meal Planning"
+        title={localizedData.mealPlanning}
         style={{ height: height * 0.06 }}
         showAddIcon={false}
       />
 
       <View style={styles.pickerContainer}>
-        <Text style={styles.label}>Select a day:</Text>
+        <Text style={styles.label}>{localizedData.selectADay}:</Text>
         <Picker
           selectedValue={selectedDay}
           style={styles.picker}
@@ -95,17 +100,17 @@ const MealPlanningScreen = () => {
 
       <View style={styles.mealContainer}>
         <MealInput
-          label="Breakfast"
+          label={localizedData.breakfast}
           value={meals[daysOfWeek.indexOf(selectedDay)].breakfast}
           onChangeText={(text) => handleMealChange("breakfast", text)}
         />
         <MealInput
-          label="Lunch"
+          label={localizedData.lunch}
           value={meals[daysOfWeek.indexOf(selectedDay)].lunch}
           onChangeText={(text) => handleMealChange("lunch", text)}
         />
         <MealInput
-          label="Dinner"
+          label={localizedData.dinner}
           value={meals[daysOfWeek.indexOf(selectedDay)].dinner}
           onChangeText={(text) => handleMealChange("dinner", text)}
         />
@@ -113,7 +118,7 @@ const MealPlanningScreen = () => {
 
       <View style={styles.buttonContainer}>
         <SecondaryButton
-          title="Save Meal Plan"
+          title={localizedData.saveMealPlanButton}
           onPress={() => saveMeals(meals)}
           style={{ height: height * 0.05 }}
         />

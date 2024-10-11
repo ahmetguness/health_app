@@ -63,7 +63,7 @@ const HomeScreen = () => {
 
           const tdy = new Date();
           const dayOfWeekNumber = tdy.getDay();
-          const dayOfWeekName = daysOfWeek[dayOfWeekNumber];
+          const dayOfWeekName = localizedData[daysOfWeek[dayOfWeekNumber]];
 
           const mealsForToday = meals[dayOfWeekNumber];
 
@@ -161,7 +161,7 @@ const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       loadUserData();
-      const todayDayOfWeek = daysOfWeek[new Date().getDay()];
+      const todayDayOfWeek = localizedData[daysOfWeek[new Date().getDay()]];
       setDayOfWeek(todayDayOfWeek);
       loadMealsForToday();
     }, [loadMealsForToday])
@@ -182,21 +182,21 @@ const HomeScreen = () => {
     if (bmi === "N/A") return "Unknown";
 
     const bmiValue = parseFloat(bmi);
-    if (bmiValue < 18.5) return "Underweight";
-    if (bmiValue < 25) return "Normal weight";
-    if (bmiValue < 30) return "Overweight";
-    if (bmiValue < 35) return "Obese (Class 1)";
-    if (bmiValue < 40) return "Obese (Class 2)";
-    return "Morbidly obese (Class 3)";
+    if (bmiValue < 18.5) return localizedData.underweight;
+    if (bmiValue < 25) return localizedData.normalWeight;
+    if (bmiValue < 30) return localizedData.overweight;
+    if (bmiValue < 35) return localizedData.obese1;
+    if (bmiValue < 40) return localizedData.obese2;
+    return localizedData.obese3;
   }, [calculateBMI]);
 
   const formatSelectedDate = useCallback((dateString) => {
     const selectedDay = new Date(dateString);
     return {
       formatted: `${
-        daysOfWeek[selectedDay.getDay()]
+        localizedData[daysOfWeek[selectedDay.getDay()]]
       }, ${selectedDay.getDate()} ${
-        monthsOfYear[selectedDay.getMonth()]
+        localizedData[monthsOfYear[selectedDay.getMonth()]]
       } ${selectedDay.getFullYear()}`,
     };
   }, []);
@@ -345,7 +345,7 @@ const HomeScreen = () => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.managementContainer}>
-          <Text style={styles.title}>Management</Text>
+          <Text style={styles.title}>{localizedData.management}</Text>
           <ScrollView
             style={styles.menuContainer}
             horizontal
@@ -368,37 +368,37 @@ const HomeScreen = () => {
         </View>
 
         <View style={styles.informationContainer}>
-          <Text style={styles.title}>Personal Information</Text>
+          <Text style={styles.title}>{localizedData.personalInformation}</Text>
           <View style={styles.innerInformationContainer}>
             {[
               {
                 icon: "birthday-cake",
-                label: `Age: ${userData.age}`,
+                label: `${localizedData.age}: ${userData.age}`,
                 Icon: FontAwesome,
               },
               {
                 icon: "human-male-height",
-                label: `Height: ${userData.height}cm`,
+                label: `${localizedData.height}: ${userData.height}cm`,
                 Icon: MaterialCommunityIcons,
               },
               {
                 icon: "weight",
-                label: `Weight: ${userData.weight}kg`,
+                label: `${localizedData.weight} ${userData.weight}kg`,
                 Icon: FontAwesome5,
               },
               {
                 icon: "gender-male-female",
-                label: `Gender: ${userData.gender}`,
+                label: `${localizedData.gender}: ${userData.gender}`,
                 Icon: MaterialCommunityIcons,
               },
               {
                 icon: "human",
-                label: `Body Mass Index: ${calculateBMI()}`,
+                label: `${localizedData.bmi}: ${calculateBMI()}`,
                 Icon: MaterialCommunityIcons,
               },
               {
                 icon: "info-circle",
-                label: `Body Type: ${getBodyType()}`,
+                label: `${localizedData.bodyType}: ${getBodyType()}`,
                 Icon: FontAwesome,
               },
             ].map(({ icon, label, Icon }, idx) => (
@@ -411,11 +411,20 @@ const HomeScreen = () => {
         </View>
 
         <View style={styles.mealListContainer}>
-          <Text style={styles.title}>Today's Food List</Text>
+          <Text style={styles.title}>{localizedData.tdysFoodList}</Text>
           <View style={styles.mealListInnerContainer}>
-            <MealCard mealTime={"Breakfast"} mealPlan={todayMeals.breakfast} />
-            <MealCard mealTime={"Lunch"} mealPlan={todayMeals.lunch} />
-            <MealCard mealTime={"Dinner"} mealPlan={todayMeals.dinner} />
+            <MealCard
+              mealTime={localizedData.breakfast}
+              mealPlan={todayMeals.breakfast}
+            />
+            <MealCard
+              mealTime={localizedData.lunch}
+              mealPlan={todayMeals.lunch}
+            />
+            <MealCard
+              mealTime={localizedData.dinner}
+              mealPlan={todayMeals.dinner}
+            />
           </View>
         </View>
       </ScrollView>

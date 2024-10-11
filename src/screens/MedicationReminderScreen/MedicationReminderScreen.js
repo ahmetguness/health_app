@@ -16,6 +16,9 @@ import MedicineCard from "../../components/cards/MedicineCard";
 import { Picker } from "@react-native-picker/picker";
 import { daysOfWeek } from "../../data/data";
 import { styles } from "./styles";
+import { useSelector } from "react-redux";
+import en from "../../locales/en.json";
+import tr from "../../locales/tr.json";
 
 export default function MedicationReminderScreen() {
   const { height } = Dimensions.get("window");
@@ -29,6 +32,9 @@ export default function MedicationReminderScreen() {
   const [selectedDays, setSelectedDays] = useState(new Array(7).fill(false));
   const [medications, setMedications] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
+
+  const lan = useSelector((state) => state.lan.lan);
+  const localizedData = lan === "en" ? en : tr;
 
   useEffect(() => {
     const loadMedications = async () => {
@@ -131,34 +137,34 @@ export default function MedicationReminderScreen() {
   return (
     <View style={styles.root}>
       <NavbarContainer
-        title={"Medication Reminder"}
+        title={localizedData.medicationReminder}
         style={{ height: height * 0.06 }}
         onPressToAdd={() => setIsModalVisible(true)}
       />
 
       <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContent}>
-          <Text style={styles.title}>Medication Reminder</Text>
+          <Text style={styles.title}>{localizedData.medicationReminder}</Text>
 
-          <Text style={styles.label}>Medication Name:</Text>
+          <Text style={styles.label}>{localizedData.medicationName}:</Text>
           <TextInput
             style={styles.input}
             value={medicationName}
             onChangeText={setMedicationName}
-            placeholder="Enter medication name"
+            placeholder={localizedData.enterMedicationName}
             placeholderTextColor="#888"
           />
 
-          <Text style={styles.label}>Description (Optional):</Text>
+          <Text style={styles.label}>{localizedData.descOptional}:</Text>
           <TextInput
             style={styles.input}
             value={medicationDescription}
             onChangeText={setMedicationDescription}
-            placeholder="Enter description"
+            placeholder={localizedData.enterDesc}
             placeholderTextColor="#888"
           />
 
-          <Text style={styles.label}>How Many Times Per Day:</Text>
+          <Text style={styles.label}>{localizedData.howMnyTmsPerDay}:</Text>
           <Picker
             selectedValue={dosesPerDay}
             style={styles.picker}
@@ -170,12 +176,18 @@ export default function MedicationReminderScreen() {
           </Picker>
 
           <ScrollView>
-            <Text style={styles.label}>Days to Take Medication:</Text>
+            <Text style={styles.label}>
+              {localizedData.dysToTakeMedication}:
+            </Text>
             {daysOfWeek.map((day, index) => (
               <View key={index} style={styles.dayContainer}>
-                <Text style={styles.dayText}>{day}</Text>
+                <Text style={styles.dayText}>{localizedData[day]}</Text>
                 <Button
-                  title={selectedDays[index] ? "Selected" : "Select"}
+                  title={
+                    selectedDays[index]
+                      ? localizedData.selected
+                      : localizedData.select
+                  }
                   onPress={() => toggleDaySelection(index)}
                   color={selectedDays[index] ? "#28A745" : "#007BFF"}
                 />
@@ -198,7 +210,7 @@ export default function MedicationReminderScreen() {
           ))}
 
           <SecondaryButton
-            title="Select Time"
+            title={localizedData.selectTime}
             onPress={() => setShowTimePicker(true)}
           />
           {showTimePicker && (
@@ -212,8 +224,14 @@ export default function MedicationReminderScreen() {
           )}
 
           <View style={styles.buttonContainer}>
-            <SecondaryButton title="Save" onPress={handleSaveMedication} />
-            <SecondaryButton title="Close" onPress={handleCloseModal} />
+            <SecondaryButton
+              title={localizedData.save}
+              onPress={handleSaveMedication}
+            />
+            <SecondaryButton
+              title={localizedData.close}
+              onPress={handleCloseModal}
+            />
           </View>
         </View>
       </Modal>
