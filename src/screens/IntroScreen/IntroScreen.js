@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, View, Text } from "react-native";
+import { Dimensions, View, Text, ActivityIndicator } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import CarouselRenderCard from "../../components/cards/CarouselRenderCard";
 import PrimaryButton from "../../components/buttons/PrimaryButton";
@@ -9,13 +9,37 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLan } from "../../redux/slices/LanSlice";
 
 const IntroScreen = () => {
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const dispatcher = useDispatch();
+
+  useEffect(() => {
+    const loadLan = async () => {
+      try {
+        const storedLan = await AsyncStorage.getItem("@lan");
+        if (storedLan) {
+          dispatcher(updateLan(storedLan));
+        } else {
+          dispatcher(updateLan("en"));
+        }
+      } catch (error) {
+        console.error("Error loading lan:", error);
+        dispatcher(updateLan("en"));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLan();
+  }, [dispatcher]);
 
   const lan = useSelector((state) => state.lan.lan);
 
@@ -29,7 +53,7 @@ const IntroScreen = () => {
           setUserData(JSON.parse(data));
         }
       } catch (error) {
-        console.error("Error loading data:", error);
+        console.error("Error loading user data:", error);
       }
     };
 
@@ -39,6 +63,14 @@ const IntroScreen = () => {
   const nextPageHandler = () => {
     navigation.navigate(userData ? "HomeScreen" : "InformationScreen");
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.root}>

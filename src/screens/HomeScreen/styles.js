@@ -13,10 +13,11 @@ export const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: COLORS.carouselBottom,
     marginTop: "2%",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: "6%",
     marginBottom: "5%",
+    flexDirection: "row",
   },
   navbarText: {
     color: COLORS.white,
@@ -71,20 +72,20 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: COLORS.white, // Background color for the modal
+    backgroundColor: COLORS.white,
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     alignItems: "center",
-    justifyContent: "flex-start", // Align content at the top
-    shadowColor: "#000", // Shadow properties for Android
+    justifyContent: "flex-start",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5, // Elevation for iOS
+    elevation: 5,
   },
   sectionTitle: {
     fontSize: 18,
@@ -126,7 +127,7 @@ export const styles = StyleSheet.create({
     elevation: 3,
   },
   appointmentCard: {
-    backgroundColor: COLORS.lightGray, // Use a different color for appointments
+    backgroundColor: COLORS.lightGray,
     borderRadius: 10,
     padding: 15,
     marginVertical: 5,
@@ -141,7 +142,7 @@ export const styles = StyleSheet.create({
     elevation: 3,
   },
   medicationCard: {
-    backgroundColor: COLORS.lightGreen, // Use another color for medications
+    backgroundColor: COLORS.lightGreen,
     borderRadius: 10,
     padding: 15,
     marginVertical: 5,
@@ -156,38 +157,52 @@ export const styles = StyleSheet.create({
     elevation: 3,
   },
   modalContainer: {
-  flex: 1,
-  backgroundColor: COLORS.background, // Background color to match app theme
-  padding: 20,
-  borderTopLeftRadius: 20,
-  borderTopRightRadius: 20,
-  alignItems: "center",
-  justifyContent: "flex-start",
-},
-modalText: {
-  fontSize: 16,
-  color: COLORS.black,
-  marginVertical: 5,
-},
-sectionTitle: {
-  fontSize: 20,
-  fontWeight: "bold",
-  color: COLORS.carouselBottom,
-  marginVertical: 10,
-},
-closeButton: {
-  backgroundColor: COLORS.carouselBottom,
-  borderRadius: 10,
-  padding: 10,
-  alignItems: "center",
-  justifyContent: "center",
-  width: '80%', // Adjust the width for better layout
-  marginTop: 20,
-},
-closeButtonText: {
-  color: COLORS.white,
-  fontWeight: "bold",
-  fontSize: 16,
-},
-
+    flex: 1,
+    backgroundColor: COLORS.background,
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  modalText: {
+    fontSize: 16,
+    color: COLORS.black,
+    marginVertical: 5,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.carouselBottom,
+    marginVertical: 10,
+  },
+  closeButton: {
+    backgroundColor: COLORS.carouselBottom,
+    borderRadius: 10,
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+    marginTop: 20,
+  },
+  closeButtonText: {
+    color: COLORS.white,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  clText: {
+    color: COLORS.white,
+  },
+  flagIcon: {
+    height: 25,
+    width: 25,
+  },
+  flagContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  languageContainer: {
+    alignItems: "center",
+    alignItems: "center",
+  },
 });

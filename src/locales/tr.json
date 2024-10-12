@@ -101,5 +101,6 @@
   "medications": "İlaçlar",
   "medication": "İlaç",
   "description": "Açıklama",
-  "noMedicationForThisDay": "Bu gün ve tarih için bir ilaç yok"
+  "noMedicationForThisDay": "Bu gün ve tarih için bir ilaç yok",
+  "changeLan": "Dili Değiştir"
 }

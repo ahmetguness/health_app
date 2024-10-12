@@ -6,6 +6,7 @@ import {
   ScrollView,
   Modal,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Calendar } from "react-native-calendars";
@@ -18,9 +19,11 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MealCard from "../../components/cards/MealCard";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
+import { updateLan } from "../../redux/slices/LanSlice";
+import Entypo from "@expo/vector-icons/Entypo";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -81,7 +84,8 @@ const HomeScreen = () => {
     };
 
     getMealsForToday();
-  }, [todayMeals]);
+  }, []);
+  // todayMeals
 
   const loadUserData = async () => {
     try {
@@ -233,12 +237,43 @@ const HomeScreen = () => {
     }
   };
 
+  const dispatcher = useDispatch();
+
+  async function toggleLan() {
+    try {
+      const currentLan = await AsyncStorage.getItem("@lan");
+      let newLan = "en";
+      if (currentLan === "en") {
+        newLan = "tr";
+      } else if (currentLan === "tr") {
+        newLan = "en";
+      }
+      await AsyncStorage.setItem("@lan", newLan);
+      dispatcher(updateLan(newLan));
+    } catch (e) {
+      console.error("Error changing language", e);
+    }
+  }
+
   return (
     <View style={styles.root}>
       <View style={[styles.navbar, { height: height * 0.06 }]}>
         <Text style={styles.navbarText}>
           {localizedData.hello} {userData.name}!
         </Text>
+        <TouchableOpacity style={styles.languageContainer} onPress={toggleLan}>
+          <View style={styles.flagContainer}>
+            <Image
+              style={[styles.flagIcon, { marginRight: "3%" }]}
+              source={require("../../assets/icons/flags/en.jpg")}
+            />
+            <Image
+              style={[styles.flagIcon, { marginLeft: "3%" }]}
+              source={require("../../assets/icons/flags/tr.jpg")}
+            />
+          </View>
+          <Text style={styles.clText}>{localizedData.changeLan}</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.calendarContainer}>

@@ -101,5 +101,6 @@
   "medications": "Medications",
   "medication": "Medication",
   "description": "Description",
-  "noMedicationForThisDay": "No medications for this date"
+  "noMedicationForThisDay": "No medications for this date",
+  "changeLan": "Change Language"
 }
