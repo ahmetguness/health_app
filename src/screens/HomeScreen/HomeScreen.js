@@ -264,81 +264,96 @@ const HomeScreen = () => {
         <View style={styles.modalContainer}>
           <Text style={styles.modalText}>{formattedDate}</Text>
 
-          <Text style={styles.sectionTitle}>Meals</Text>
+          <Text style={styles.sectionTitle}>{localizedData.meals}</Text>
           {meals.breakfast || meals.lunch || meals.dinner ? (
             <View style={{ width: "100%" }}>
               {meals.breakfast && (
                 <View style={styles.mealCard}>
                   <Text style={styles.modalText}>
-                    Breakfast: {meals.breakfast}
+                    {localizedData.breakfast}: {meals.breakfast}
                   </Text>
                 </View>
               )}
               {meals.lunch && (
                 <View style={styles.mealCard}>
-                  <Text style={styles.modalText}>Lunch: {meals.lunch}</Text>
+                  <Text style={styles.modalText}>
+                    {localizedData.lunch}: {meals.lunch}
+                  </Text>
                 </View>
               )}
               {meals.dinner && (
                 <View style={styles.mealCard}>
-                  <Text style={styles.modalText}>Dinner: {meals.dinner}</Text>
+                  <Text style={styles.modalText}>
+                    {localizedData.dinner}: {meals.dinner}
+                  </Text>
                 </View>
               )}
             </View>
           ) : (
-            <Text style={styles.modalText}>No meals for this date.</Text>
+            <Text style={styles.modalText}>
+              {localizedData.noMealsForThisDate}
+            </Text>
           )}
 
-          <Text style={styles.sectionTitle}>Doctor Appointments</Text>
+          <Text style={styles.sectionTitle}>
+            {localizedData.doctorAppointments}
+          </Text>
           {appointments.length > 0 ? (
             appointments.map((appointment, index) => (
               <View key={index} style={styles.appointmentCard}>
                 <Text style={styles.modalText}>
-                  Doctor: {appointment.doctorName}
+                  {localizedData.doctorName}: {appointment.doctorName}
                 </Text>
                 <Text style={styles.modalText}>
-                  Department: {appointment.department}
+                  {localizedData.department}: {appointment.department}
                 </Text>
                 <Text style={styles.modalText}>
-                  Hospital: {appointment.hospital}
+                  {localizedData.hospital}: {appointment.hospital}
                 </Text>
-                <Text style={styles.modalText}>Note: {appointment.note}</Text>
                 <Text style={styles.modalText}>
-                  Time: {new Date(appointment.time).toLocaleTimeString()}
+                  {localizedData.note}: {appointment.note}
+                </Text>
+                <Text style={styles.modalText}>
+                  {localizedData.time}:{" "}
+                  {new Date(appointment.time).toLocaleTimeString()}
                 </Text>
               </View>
             ))
           ) : (
-            <Text style={styles.modalText}>No appointments for this date.</Text>
+            <Text style={styles.modalText}>
+              {localizedData.noAppoForThisDate}
+            </Text>
           )}
 
-          <Text style={styles.sectionTitle}>Medications</Text>
+          <Text style={styles.sectionTitle}>{localizedData.medications}</Text>
           {medications.length > 0 ? (
             medications.map((medication, index) => (
               <View key={index} style={styles.medicationCard}>
                 <Text style={styles.modalText}>
-                  Medication: {medication.name}
+                  {localizedData.medication}: {medication.name}
                 </Text>
                 <Text style={styles.modalText}>
-                  Description: {medication.description}
+                  {localizedData.description}: {medication.description}
                 </Text>
                 <Text style={styles.modalText}>
-                  Doses Per Day: {medication.dosesPerDay}
+                  {localizedData.dosesPerDay}: {medication.dosesPerDay}
                 </Text>
                 <Text style={styles.modalText}>
-                  Times: {medication.doseTimes.join(", ")}
+                  {localizedData.time}: {medication.doseTimes.join(", ")}
                 </Text>
               </View>
             ))
           ) : (
-            <Text style={styles.modalText}>No medications for this date.</Text>
+            <Text style={styles.modalText}>
+              {localizedData.noMedicationForThisDay}
+            </Text>
           )}
 
           <TouchableOpacity
             style={styles.closeButton}
             onPress={() => setIsModalVisible(false)}
           >
-            <Text style={styles.closeButtonText}>Close</Text>
+            <Text style={styles.closeButtonText}>{localizedData.close}</Text>
           </TouchableOpacity>
         </View>
       </Modal>

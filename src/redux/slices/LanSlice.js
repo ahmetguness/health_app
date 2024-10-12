@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const LanSlice = createSlice({
   name: "lan",
   initialState: {
-    lan: "tr",
+    lan: "en",
   },
   reducers: {
     updateLan(state, action) {

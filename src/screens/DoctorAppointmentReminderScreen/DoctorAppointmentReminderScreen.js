@@ -15,6 +15,9 @@ import SecondaryButton from "../../components/buttons/SecondaryButton";
 import NavbarContainer from "../../components/navbar/NavbarContainer";
 import { styles } from "./styles";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import en from "../../locales/en.json";
+import tr from "../../locales/tr.json";
+import { useSelector } from "react-redux";
 
 export default function DoctorAppointmentReminderScreen() {
   const { height } = Dimensions.get("window");
@@ -30,6 +33,9 @@ export default function DoctorAppointmentReminderScreen() {
   const [appointments, setAppointments] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [daysBeforeNotification, setDaysBeforeNotification] = useState(1);
+  const lan = useSelector((state) => state.lan.lan);
+
+  const localizedData = lan === "en" ? en : tr;
 
   useEffect(() => {
     const loadAppointments = async () => {
@@ -141,47 +147,49 @@ export default function DoctorAppointmentReminderScreen() {
   return (
     <View style={styles.root}>
       <NavbarContainer
-        title={"Doctor Appointment Reminder"}
+        title={localizedData.doctorAppointmentReminder}
         style={{ height: height * 0.06 }}
         onPressToAdd={handleAddPress}
       />
       <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContent}>
-          <Text style={styles.title}>Doctor Appointment Reminder</Text>
+          <Text style={styles.title}>
+            {localizedData.doctorAppointmentReminder}
+          </Text>
 
-          <Text style={styles.label}>Department:</Text>
+          <Text style={styles.label}>{localizedData.department}:</Text>
           <TextInput
             style={styles.input}
             value={department}
             onChangeText={setDepartment}
-            placeholder="Enter department"
+            placeholder={localizedData.enterDep}
             placeholderTextColor="#888"
           />
 
-          <Text style={styles.label}>Hospital:</Text>
+          <Text style={styles.label}>{localizedData.hospital}:</Text>
           <TextInput
             style={styles.input}
             value={hospital}
             onChangeText={setHospital}
-            placeholder="Enter hospital"
+            placeholder={localizedData.enterHosp}
             placeholderTextColor="#888"
           />
 
-          <Text style={styles.label}>Doctor Name:</Text>
+          <Text style={styles.label}>{localizedData.doctorName}:</Text>
           <TextInput
             style={styles.input}
             value={doctorName}
             onChangeText={setDoctorName}
-            placeholder="Enter doctor's name"
+            placeholder={localizedData.enterDocName}
             placeholderTextColor="#888"
           />
 
-          <Text style={styles.label}>Note (Optional):</Text>
+          <Text style={styles.label}>{localizedData.noteOptional}:</Text>
           <TextInput
             style={styles.input}
             value={note}
             onChangeText={setNote}
-            placeholder="Enter note"
+            placeholder={localizedData.enterNote}
             placeholderTextColor="#888"
           />
 
@@ -193,12 +201,12 @@ export default function DoctorAppointmentReminderScreen() {
             }}
           >
             <SecondaryButton
-              title="Select Date"
+              title={localizedData.selectDate}
               onPress={() => setShowDatePicker(true)}
               style={{ height: height * 0.05, width: "100%" }}
             />
             <Text style={styles.timeText}>
-              Selected Date: {selectedDate.toLocaleDateString()}
+              {localizedData.selectedDate}: {selectedDate.toLocaleDateString()}
             </Text>
           </View>
           {showDatePicker && (
@@ -218,12 +226,12 @@ export default function DoctorAppointmentReminderScreen() {
             }}
           >
             <SecondaryButton
-              title="Select Time"
+              title={localizedData.selectTime}
               onPress={() => setShowTimePicker(true)}
               style={{ height: height * 0.05, width: "100%" }}
             />
             <Text style={styles.timeText}>
-              Selected Time: {selectedTime.toLocaleTimeString()}
+              {localizedData.selectedTime}: {selectedTime.toLocaleTimeString()}
             </Text>
           </View>
           {showTimePicker && (
@@ -236,26 +244,31 @@ export default function DoctorAppointmentReminderScreen() {
             />
           )}
 
-          <Text style={styles.label}>Notify Me Before (Days):</Text>
+          <Text style={styles.label}>{localizedData.notifyMeBeforedys}:</Text>
           <Picker
             selectedValue={daysBeforeNotification}
             onValueChange={(itemValue) => setDaysBeforeNotification(itemValue)}
             style={styles.picker}
           >
-            <Picker.Item label="1 day" value={1} />
-            <Picker.Item label="2 days" value={2} />
-            <Picker.Item label="3 days" value={3} />
-            <Picker.Item label="5 days" value={5} />
-            <Picker.Item label="7 days" value={7} />
+            <Picker.Item label={`1 ${localizedData.day}`} value={1} />
+            <Picker.Item label={`2 ${localizedData.day}`} value={2} />
+            <Picker.Item label={`3 ${localizedData.day}`} value={3} />
+            <Picker.Item label={`4 ${localizedData.day}`} value={4} />
+            <Picker.Item label={`5 ${localizedData.day}`} value={5} />
+            <Picker.Item label={`6 ${localizedData.day}`} value={6} />
+            <Picker.Item label={`7 ${localizedData.day}`} value={7} />
           </Picker>
 
           <View style={styles.buttonContainer}>
             <SecondaryButton
-              title="Save"
+              title={localizedData.save}
               onPress={handleSaveAppointment}
               style={{ height: height * 0.05 }}
             />
-            <SecondaryButton title="Close" onPress={handleCloseModal} />
+            <SecondaryButton
+              title={localizedData.close}
+              onPress={handleCloseModal}
+            />
           </View>
         </View>
       </Modal>
@@ -265,25 +278,26 @@ export default function DoctorAppointmentReminderScreen() {
           <View key={index} style={styles.card}>
             <View>
               <Text style={styles.cardText}>
-                Department: {appointment.department}
+                {localizedData.department}: {appointment.department}
               </Text>
               <Text style={styles.cardText}>
-                Hospital: {appointment.hospital}
+                {localizedData.hospital}: {appointment.hospital}
               </Text>
               <Text style={styles.cardText}>
-                Doctor: {appointment.doctorName}
+                {localizedData.doctorName}: {appointment.doctorName}
               </Text>
               <Text style={styles.cardText}>
-                Note: {appointment.note || "No note"}
+                {localizedData.note}: {appointment.note || "No note"}
               </Text>
               <Text style={styles.cardText}>
-                Date: {appointment.date.toLocaleDateString()}
+                {localizedData.date}: {appointment.date.toLocaleDateString()}
               </Text>
               <Text style={styles.cardText}>
-                Time: {appointment.time.toLocaleTimeString()}
+                {localizedData.time}: {appointment.time.toLocaleTimeString()}
               </Text>
               <Text style={styles.cardText}>
-                Notify: {appointment.daysBeforeNotification} day(s) before
+                {localizedData.notify}: {appointment.daysBeforeNotification}{" "}
+                {localizedData.daysBefore}
               </Text>
             </View>
             <View style={styles.iconContainer}>

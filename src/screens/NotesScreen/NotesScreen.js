@@ -14,6 +14,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import NoteCard from "../../components/cards/NoteCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
+import en from "../../locales/en.json";
+import tr from "../../locales/tr.json";
 
 export default function NotesScreen() {
   const navigation = useNavigation();
@@ -22,6 +25,9 @@ export default function NotesScreen() {
   const [note, setNote] = useState("");
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState([]);
+  const lan = useSelector((state) => state.lan.lan);
+
+  const localizedData = lan === "en" ? en : tr;
 
   const today = new Date();
   const formattedDay = formatDateTime(today);
@@ -75,7 +81,9 @@ export default function NotesScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.navbarText}>NOTES</Text>
+        <Text style={styles.navbarText}>
+          {localizedData.notes.toUpperCase()}
+        </Text>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Ionicons name="add-sharp" size={24} color="white" />
         </TouchableOpacity>
@@ -107,13 +115,13 @@ export default function NotesScreen() {
           <View style={[styles.modalContent, { width: "90%" }]}>
             <TextInput
               style={styles.titleInput}
-              placeholder="Enter Title"
+              placeholder={localizedData.enterTitle}
               value={title}
               onChangeText={(text) => setTitle(text)}
             />
             <TextInput
               style={styles.input}
-              placeholder="Write your note here"
+              placeholder={localizedData.writeUrNoteHere}
               value={note}
               onChangeText={(text) => setNote(text)}
               multiline={true}
@@ -122,13 +130,13 @@ export default function NotesScreen() {
             />
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.saveButton} onPress={saveNote}>
-                <Text style={styles.buttonText}>Save</Text>
+                <Text style={styles.buttonText}>{localizedData.save}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.buttonText}>Close</Text>
+                <Text style={styles.buttonText}>{localizedData.close}</Text>
               </TouchableOpacity>
             </View>
           </View>

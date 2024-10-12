@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { COLORS } from "../../theme/colors";
+import en from "../../locales/en.json";
+import tr from "../../locales/tr.json";
+import { useSelector } from "react-redux";
 
 export default function NoteCard({ title, note, date, onDelete, onEdit }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -20,7 +23,9 @@ export default function NoteCard({ title, note, date, onDelete, onEdit }) {
     setIsEditing(false);
     setModalVisible(false);
   };
+  const lan = useSelector((state) => state.lan.lan);
 
+  const localizedData = lan === "en" ? en : tr;
   return (
     <View style={styles.cardContainer}>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -68,13 +73,17 @@ export default function NoteCard({ title, note, date, onDelete, onEdit }) {
                     style={styles.saveButton}
                     onPress={handleSaveEdit}
                   >
-                    <Text style={styles.saveButtonText}>Save</Text>
+                    <Text style={styles.saveButtonText}>
+                      {localizedData.save}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.closeButton}
                     onPress={() => setModalVisible(false)}
                   >
-                    <Text style={styles.closeButtonText}>Close</Text>
+                    <Text style={styles.closeButtonText}>
+                      {localizedData.close}
+                    </Text>
                   </TouchableOpacity>
                 </>
               ) : (
@@ -82,7 +91,9 @@ export default function NoteCard({ title, note, date, onDelete, onEdit }) {
                   style={styles.editButton}
                   onPress={() => setIsEditing(true)}
                 >
-                  <Text style={styles.editButtonText}>Edit</Text>
+                  <Text style={styles.editButtonText}>
+                    {localizedData.edit}
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -94,7 +105,9 @@ export default function NoteCard({ title, note, date, onDelete, onEdit }) {
                 setModalVisible(false);
               }}
             >
-              <Text style={styles.deleteButtonText}>Delete</Text>
+              <Text style={styles.deleteButtonText}>
+                {localizedData.delete}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
