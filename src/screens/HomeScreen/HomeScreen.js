@@ -30,6 +30,7 @@ const HomeScreen = () => {
   const { height } = Dimensions.get("window");
   const today = new Date().toISOString().split("T")[0];
 
+  const refreshNeeded = useSelector((state) => state.refresh.refreshNeeded);
   const [selectedDate, setSelectedDate] = useState(today);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formattedDate, setFormattedDate] = useState("");
@@ -56,36 +57,32 @@ const HomeScreen = () => {
   const lan = useSelector((state) => state.lan.lan);
   const localizedData = lan === "en" ? en : tr;
 
-  useEffect(() => {
-    const getMealsForToday = async () => {
-      try {
-        const mealsData = await AsyncStorage.getItem("meals");
+  const getMealsForToday = async () => {
+    try {
+      const mealsData = await AsyncStorage.getItem("meals");
 
-        if (mealsData !== null) {
-          const meals = JSON.parse(mealsData);
+      if (mealsData !== null) {
+        const meals = JSON.parse(mealsData);
+        const tdy = new Date();
+        const dayOfWeekNumber = tdy.getDay();
 
-          const tdy = new Date();
-          const dayOfWeekNumber = tdy.getDay();
-          const dayOfWeekName = localizedData[daysOfWeek[dayOfWeekNumber]];
-
-          const mealsForToday = meals[dayOfWeekNumber];
-
-          setTodayMeals({
-            breakfast: mealsForToday.breakfast,
-            lunch: mealsForToday.lunch,
-            dinner: mealsForToday.dinner,
-          });
-        } else {
-          console.log("Yemek verisi bulunamadı.");
-        }
-      } catch (error) {
-        console.error("Async Storage okuma hatası:", error);
+        const mealsForToday = meals[dayOfWeekNumber];
+        setTodayMeals({
+          breakfast: mealsForToday.breakfast,
+          lunch: mealsForToday.lunch,
+          dinner: mealsForToday.dinner,
+        });
+      } else {
+        console.log("Yemek verisi bulunamadı.");
       }
-    };
+    } catch (error) {
+      console.error("Async Storage okuma hatası:", error);
+    }
+  };
 
+  useEffect(() => {
     getMealsForToday();
-  }, []);
-  // todayMeals
+  }, [refreshNeeded]);
 
   const loadUserData = async () => {
     try {

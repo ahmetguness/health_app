@@ -8,7 +8,8 @@ import SecondaryButton from "../../components/buttons/SecondaryButton";
 import { styles } from "./styles";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { triggerRefresh } from "../../redux/slices/RefreshSlice";
 
 const MealInput = ({ label, value, onChangeText, onSubmitEditing }) => (
   <>
@@ -29,6 +30,7 @@ const MealPlanningScreen = () => {
   const lan = useSelector((state) => state.lan.lan);
   const localizedData = lan === "en" ? en : tr;
   const { height } = Dimensions.get("window");
+  const dispatch = useDispatch();
 
   const [selectedDay, setSelectedDay] = useState(daysOfWeek[0]);
   const [meals, setMeals] = useState(
@@ -54,6 +56,8 @@ const MealPlanningScreen = () => {
     try {
       await AsyncStorage.setItem("meals", JSON.stringify(mealData));
       Alert.alert("Success", "Meals saved successfully!");
+
+      dispatch(triggerRefresh());
     } catch (error) {
       console.error("Failed to save meals:", error);
     }
