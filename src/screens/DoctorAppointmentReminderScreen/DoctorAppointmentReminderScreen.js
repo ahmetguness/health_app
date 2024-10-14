@@ -153,123 +153,129 @@ export default function DoctorAppointmentReminderScreen() {
       />
       <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContent}>
-          <Text style={styles.title}>
-            {localizedData.doctorAppointmentReminder}
-          </Text>
-
-          <Text style={styles.label}>{localizedData.department}:</Text>
-          <TextInput
-            style={styles.input}
-            value={department}
-            onChangeText={setDepartment}
-            placeholder={localizedData.enterDep}
-            placeholderTextColor="#888"
-          />
-
-          <Text style={styles.label}>{localizedData.hospital}:</Text>
-          <TextInput
-            style={styles.input}
-            value={hospital}
-            onChangeText={setHospital}
-            placeholder={localizedData.enterHosp}
-            placeholderTextColor="#888"
-          />
-
-          <Text style={styles.label}>{localizedData.doctorName}:</Text>
-          <TextInput
-            style={styles.input}
-            value={doctorName}
-            onChangeText={setDoctorName}
-            placeholder={localizedData.enterDocName}
-            placeholderTextColor="#888"
-          />
-
-          <Text style={styles.label}>{localizedData.noteOptional}:</Text>
-          <TextInput
-            style={styles.input}
-            value={note}
-            onChangeText={setNote}
-            placeholder={localizedData.enterNote}
-            placeholderTextColor="#888"
-          />
-
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <SecondaryButton
-              title={localizedData.selectDate}
-              onPress={() => setShowDatePicker(true)}
-              style={{ height: height * 0.05, width: "100%" }}
-            />
-            <Text style={styles.timeText}>
-              {localizedData.selectedDate}: {selectedDate.toLocaleDateString()}
+          <ScrollView>
+            <Text style={styles.title}>
+              {localizedData.doctorAppointmentReminder}
             </Text>
-          </View>
-          {showDatePicker && (
-            <DateTimePicker
-              value={selectedDate}
-              mode="date"
-              display="default"
-              onChange={handleDatePick}
-            />
-          )}
 
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <SecondaryButton
-              title={localizedData.selectTime}
-              onPress={() => setShowTimePicker(true)}
-              style={{ height: height * 0.05, width: "100%" }}
+            <Text style={styles.label}>{localizedData.department}:</Text>
+            <TextInput
+              style={styles.input}
+              value={department}
+              onChangeText={setDepartment}
+              placeholder={localizedData.enterDep}
+              placeholderTextColor="#888"
             />
-            <Text style={styles.timeText}>
-              {localizedData.selectedTime}: {selectedTime.toLocaleTimeString()}
-            </Text>
-          </View>
-          {showTimePicker && (
-            <DateTimePicker
-              value={selectedTime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={handleTimePick}
-            />
-          )}
 
-          <Text style={styles.label}>{localizedData.notifyMeBeforedys}:</Text>
-          <Picker
-            selectedValue={daysBeforeNotification}
-            onValueChange={(itemValue) => setDaysBeforeNotification(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label={`1 ${localizedData.day}`} value={1} />
-            <Picker.Item label={`2 ${localizedData.day}`} value={2} />
-            <Picker.Item label={`3 ${localizedData.day}`} value={3} />
-            <Picker.Item label={`4 ${localizedData.day}`} value={4} />
-            <Picker.Item label={`5 ${localizedData.day}`} value={5} />
-            <Picker.Item label={`6 ${localizedData.day}`} value={6} />
-            <Picker.Item label={`7 ${localizedData.day}`} value={7} />
-          </Picker>
+            <Text style={styles.label}>{localizedData.hospital}:</Text>
+            <TextInput
+              style={styles.input}
+              value={hospital}
+              onChangeText={setHospital}
+              placeholder={localizedData.enterHosp}
+              placeholderTextColor="#888"
+            />
 
-          <View style={styles.buttonContainer}>
-            <SecondaryButton
-              title={localizedData.save}
-              onPress={handleSaveAppointment}
-              style={{ height: height * 0.05 }}
+            <Text style={styles.label}>{localizedData.doctorName}:</Text>
+            <TextInput
+              style={styles.input}
+              value={doctorName}
+              onChangeText={setDoctorName}
+              placeholder={localizedData.enterDocName}
+              placeholderTextColor="#888"
             />
-            <SecondaryButton
-              title={localizedData.close}
-              onPress={handleCloseModal}
+
+            <Text style={styles.label}>{localizedData.noteOptional}:</Text>
+            <TextInput
+              style={styles.input}
+              value={note}
+              onChangeText={setNote}
+              placeholder={localizedData.enterNote}
+              placeholderTextColor="#888"
             />
-          </View>
+
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <SecondaryButton
+                title={localizedData.selectDate}
+                onPress={() => setShowDatePicker(true)}
+                style={{ height: height * 0.05, width: "100%" }}
+              />
+              <Text style={styles.timeText}>
+                {localizedData.selectedDate}:{" "}
+                {selectedDate.toLocaleDateString()}
+              </Text>
+            </View>
+            {showDatePicker && (
+              <DateTimePicker
+                value={selectedDate}
+                mode="date"
+                display="default"
+                onChange={handleDatePick}
+              />
+            )}
+
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <SecondaryButton
+                title={localizedData.selectTime}
+                onPress={() => setShowTimePicker(true)}
+                style={{ height: height * 0.05, width: "100%" }}
+              />
+              <Text style={styles.timeText}>
+                {localizedData.selectedTime}:{" "}
+                {selectedTime.toLocaleTimeString()}
+              </Text>
+            </View>
+            {showTimePicker && (
+              <DateTimePicker
+                value={selectedTime}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={handleTimePick}
+              />
+            )}
+
+            <Text style={styles.label}>{localizedData.notifyMeBeforedys}:</Text>
+            <Picker
+              selectedValue={daysBeforeNotification}
+              onValueChange={(itemValue) =>
+                setDaysBeforeNotification(itemValue)
+              }
+              style={styles.picker}
+            >
+              <Picker.Item label={`1 ${localizedData.day}`} value={1} />
+              <Picker.Item label={`2 ${localizedData.day}`} value={2} />
+              <Picker.Item label={`3 ${localizedData.day}`} value={3} />
+              <Picker.Item label={`4 ${localizedData.day}`} value={4} />
+              <Picker.Item label={`5 ${localizedData.day}`} value={5} />
+              <Picker.Item label={`6 ${localizedData.day}`} value={6} />
+              <Picker.Item label={`7 ${localizedData.day}`} value={7} />
+            </Picker>
+
+            <View style={styles.buttonContainer}>
+              <SecondaryButton
+                title={localizedData.save}
+                onPress={handleSaveAppointment}
+                style={{ height: height * 0.05 }}
+              />
+              <SecondaryButton
+                title={localizedData.close}
+                onPress={handleCloseModal}
+              />
+            </View>
+          </ScrollView>
         </View>
       </Modal>
 

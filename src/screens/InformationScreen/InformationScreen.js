@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, Alert, TextInput } from "react-native";
+import { View, Text, Alert, TextInput, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { styles } from "./styles";
 import {
@@ -130,55 +130,57 @@ export default function InformationScreen() {
 
   return (
     <View style={styles.root}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title1}>{titleText[0]}</Text>
-        <Text style={styles.title2}>{titleText[1]}</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <InputField
-          label={localizedData.name}
-          value={name}
-          onChange={setName}
-          placeholder="Enter your name"
-        />
-        <PickerField
-          label={localizedData.age}
-          selectedValue={age}
-          onValueChange={handleAgeChange}
-          items={ageItems}
-        />
-        <PickerField
-          label={localizedData.weight}
-          selectedValue={weight}
-          onValueChange={handleWeightChange}
-          items={weightItems}
-        />
-        <PickerField
-          label={localizedData.height}
-          selectedValue={height}
-          onValueChange={handleHeightChange}
-          items={heightItems}
-        />
-        <PickerField
-          label={localizedData.gender}
-          selectedValue={gender}
-          onValueChange={handleGenderChange}
-          items={genderItems}
-        />
-      </View>
-      <View
-        style={{
-          marginBottom: "10%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <SecondaryButton
-          title={titleText[2]}
-          onPress={handleNext}
-          style={{ height: 50 }}
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title1}>{titleText[0]}</Text>
+          <Text style={styles.title2}>{titleText[1]}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <InputField
+            label={localizedData.name}
+            value={name}
+            onChange={setName}
+            placeholder="Enter your name"
+          />
+          <PickerField
+            label={localizedData.age}
+            selectedValue={age}
+            onValueChange={handleAgeChange}
+            items={ageItems}
+          />
+          <PickerField
+            label={localizedData.weight}
+            selectedValue={weight}
+            onValueChange={handleWeightChange}
+            items={weightItems}
+          />
+          <PickerField
+            label={localizedData.height}
+            selectedValue={height}
+            onValueChange={handleHeightChange}
+            items={heightItems}
+          />
+          <PickerField
+            label={localizedData.gender}
+            selectedValue={gender}
+            onValueChange={handleGenderChange}
+            items={genderItems}
+          />
+        </View>
+        <View
+          style={{
+            marginBottom: "10%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <SecondaryButton
+            title={titleText[2]}
+            onPress={handleNext}
+            style={{ height: 50 }}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 }

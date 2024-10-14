@@ -102,5 +102,9 @@
   "medication": "İlaç",
   "description": "Açıklama",
   "noMedicationForThisDay": "Bu gün ve tarih için bir ilaç yok",
-  "changeLan": "Dili Değiştir"
+  "changeLan": "Dili Değiştir",
+  "male": "Erkek",
+  "female": "Kadın",
+  "other": "Diğer",
+  "selectGender": "Cinsiyet Seç"
 }

@@ -144,95 +144,97 @@ export default function MedicationReminderScreen() {
 
       <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContent}>
-          <Text style={styles.title}>{localizedData.medicationReminder}</Text>
-
-          <Text style={styles.label}>{localizedData.medicationName}:</Text>
-          <TextInput
-            style={styles.input}
-            value={medicationName}
-            onChangeText={setMedicationName}
-            placeholder={localizedData.enterMedicationName}
-            placeholderTextColor="#888"
-          />
-
-          <Text style={styles.label}>{localizedData.descOptional}:</Text>
-          <TextInput
-            style={styles.input}
-            value={medicationDescription}
-            onChangeText={setMedicationDescription}
-            placeholder={localizedData.enterDesc}
-            placeholderTextColor="#888"
-          />
-
-          <Text style={styles.label}>{localizedData.howMnyTmsPerDay}:</Text>
-          <Picker
-            selectedValue={dosesPerDay}
-            style={styles.picker}
-            onValueChange={(itemValue) => setDosesPerDay(itemValue)}
-          >
-            {[1, 2, 3, 4, 5].map((num) => (
-              <Picker.Item key={num} label={`${num}`} value={num} />
-            ))}
-          </Picker>
-
           <ScrollView>
-            <Text style={styles.label}>
-              {localizedData.dysToTakeMedication}:
-            </Text>
-            {daysOfWeek.map((day, index) => (
-              <View key={index} style={styles.dayContainer}>
-                <Text style={styles.dayText}>{localizedData[day]}</Text>
-                <Button
-                  title={
-                    selectedDays[index]
-                      ? localizedData.selected
-                      : localizedData.select
-                  }
-                  onPress={() => toggleDaySelection(index)}
-                  color={selectedDays[index] ? "#28A745" : "#007BFF"}
+            <Text style={styles.title}>{localizedData.medicationReminder}</Text>
+
+            <Text style={styles.label}>{localizedData.medicationName}:</Text>
+            <TextInput
+              style={styles.input}
+              value={medicationName}
+              onChangeText={setMedicationName}
+              placeholder={localizedData.enterMedicationName}
+              placeholderTextColor="#888"
+            />
+
+            <Text style={styles.label}>{localizedData.descOptional}:</Text>
+            <TextInput
+              style={styles.input}
+              value={medicationDescription}
+              onChangeText={setMedicationDescription}
+              placeholder={localizedData.enterDesc}
+              placeholderTextColor="#888"
+            />
+
+            <Text style={styles.label}>{localizedData.howMnyTmsPerDay}:</Text>
+            <Picker
+              selectedValue={dosesPerDay}
+              style={styles.picker}
+              onValueChange={(itemValue) => setDosesPerDay(itemValue)}
+            >
+              {[1, 2, 3, 4, 5].map((num) => (
+                <Picker.Item key={num} label={`${num}`} value={num} />
+              ))}
+            </Picker>
+
+            <ScrollView>
+              <Text style={styles.label}>
+                {localizedData.dysToTakeMedication}:
+              </Text>
+              {daysOfWeek.map((day, index) => (
+                <View key={index} style={styles.dayContainer}>
+                  <Text style={styles.dayText}>{localizedData[day]}</Text>
+                  <Button
+                    title={
+                      selectedDays[index]
+                        ? localizedData.selected
+                        : localizedData.select
+                    }
+                    onPress={() => toggleDaySelection(index)}
+                    color={selectedDays[index] ? "#28A745" : "#007BFF"}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+
+            {doseTimes.map((time, index) => (
+              <View key={index} style={styles.timeContainer}>
+                <SecondaryButton
+                  title="Edit Time"
+                  onPress={() => {
+                    setShowTimePicker(true);
+                  }}
                 />
+                <Text style={styles.timeText}>
+                  Selected Time: {time.toLocaleTimeString()}
+                </Text>
               </View>
             ))}
-          </ScrollView>
 
-          {doseTimes.map((time, index) => (
-            <View key={index} style={styles.timeContainer}>
-              <SecondaryButton
-                title="Edit Time"
-                onPress={() => {
-                  setShowTimePicker(true);
-                }}
+            <SecondaryButton
+              title={localizedData.selectTime}
+              onPress={() => setShowTimePicker(true)}
+            />
+            {showTimePicker && (
+              <DateTimePicker
+                value={selectedTime}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={handleTimePick}
               />
-              <Text style={styles.timeText}>
-                Selected Time: {time.toLocaleTimeString()}
-              </Text>
+            )}
+
+            <View style={styles.buttonContainer}>
+              <SecondaryButton
+                title={localizedData.save}
+                onPress={handleSaveMedication}
+              />
+              <SecondaryButton
+                title={localizedData.close}
+                onPress={handleCloseModal}
+              />
             </View>
-          ))}
-
-          <SecondaryButton
-            title={localizedData.selectTime}
-            onPress={() => setShowTimePicker(true)}
-          />
-          {showTimePicker && (
-            <DateTimePicker
-              value={selectedTime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={handleTimePick}
-            />
-          )}
-
-          <View style={styles.buttonContainer}>
-            <SecondaryButton
-              title={localizedData.save}
-              onPress={handleSaveMedication}
-            />
-            <SecondaryButton
-              title={localizedData.close}
-              onPress={handleCloseModal}
-            />
-          </View>
+          </ScrollView>
         </View>
       </Modal>
 
