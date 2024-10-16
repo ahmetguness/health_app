@@ -11,12 +11,16 @@ import tr from "../../locales/tr.json";
 import { useDispatch, useSelector } from "react-redux";
 import { triggerRefresh } from "../../redux/slices/RefreshSlice";
 
-const MealInput = ({ label, value, onChangeText, onSubmitEditing }) => (
+const MealInput = ({ label, value, onChangeText, onSubmitEditing, lan }) => (
   <>
     <Text style={styles.mealLabel}>{label}</Text>
     <TextInput
       style={styles.input}
-      placeholder={`Enter ${label.toLowerCase()}`}
+      placeholder={
+        lan === "en"
+          ? `Enter ${label.toLowerCase()}`
+          : `${label.toLowerCase()} Giriniz`
+      }
       multiline
       numberOfLines={4}
       value={value}
@@ -31,6 +35,8 @@ const MealPlanningScreen = () => {
   const localizedData = lan === "en" ? en : tr;
   const { height } = Dimensions.get("window");
   const dispatch = useDispatch();
+
+  const localizedDaysOfWeek = daysOfWeek.map((day) => localizedData[day]);
 
   const [selectedDay, setSelectedDay] = useState(daysOfWeek[0]);
   const [meals, setMeals] = useState(
@@ -96,24 +102,31 @@ const MealPlanningScreen = () => {
           style={styles.picker}
           onValueChange={setSelectedDay}
         >
-          {daysOfWeek.map((day) => (
-            <Picker.Item key={day} label={day} value={day} />
+          {daysOfWeek.map((day, index) => (
+            <Picker.Item
+              key={day}
+              label={localizedDaysOfWeek[index]}
+              value={day}
+            />
           ))}
         </Picker>
       </View>
 
       <View style={styles.mealContainer}>
         <MealInput
+          lan={lan}
           label={localizedData.breakfast}
           value={meals[daysOfWeek.indexOf(selectedDay)].breakfast}
           onChangeText={(text) => handleMealChange("breakfast", text)}
         />
         <MealInput
+          lan={lan}
           label={localizedData.lunch}
           value={meals[daysOfWeek.indexOf(selectedDay)].lunch}
           onChangeText={(text) => handleMealChange("lunch", text)}
         />
         <MealInput
+          lan={lan}
           label={localizedData.dinner}
           value={meals[daysOfWeek.indexOf(selectedDay)].dinner}
           onChangeText={(text) => handleMealChange("dinner", text)}

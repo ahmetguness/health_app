@@ -31,7 +31,6 @@ export const styles = StyleSheet.create({
   textInput: {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.carouselBottom,
-    // paddingHorizontal: "5%"
   },
   title3: {
     color: COLORS.carouselBottom,
@@ -44,5 +43,10 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: COLORS.white,
     paddingHorizontal: 10,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingVertical: "10%",
   },
 });

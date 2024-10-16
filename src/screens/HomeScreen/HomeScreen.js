@@ -23,7 +23,6 @@ import { useDispatch, useSelector } from "react-redux";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
 import { updateLan } from "../../redux/slices/LanSlice";
-import Entypo from "@expo/vector-icons/Entypo";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -39,7 +38,6 @@ const HomeScreen = () => {
     name: "",
     age: "",
     weight: "",
-    gender: "",
     height: "",
   });
   const [meals, setMeals] = useState({
@@ -176,7 +174,7 @@ const HomeScreen = () => {
       return bmi.toFixed(1);
     }
     return "N/A";
-  }, [userData]);
+  }, [userData, localizedData]);
 
   const getBodyType = useCallback(() => {
     const bmi = calculateBMI();
@@ -432,11 +430,6 @@ const HomeScreen = () => {
                 icon: "weight",
                 label: `${localizedData.weight} ${userData.weight}kg`,
                 Icon: FontAwesome5,
-              },
-              {
-                icon: "gender-male-female",
-                label: `${localizedData.gender}: ${userData.gender}`,
-                Icon: MaterialCommunityIcons,
               },
               {
                 icon: "human",

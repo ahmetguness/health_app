@@ -106,5 +106,6 @@
   "male": "Male",
   "female": "Female",
   "other": "Other",
-  "selectGender": "Select Gender"
+  "selectGender": "Select Gender",
+  "enter": "Enter"
 }

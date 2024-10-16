@@ -2,12 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Alert, TextInput, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { styles } from "./styles";
-import {
-  ageItems,
-  genderItems,
-  weightItems,
-  heightItems,
-} from "../../data/data";
+import { ageItems, weightItems, heightItems } from "../../data/data";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
@@ -43,13 +38,11 @@ const PickerField = React.memo(
     </View>
   )
 );
-
 export default function InformationScreen() {
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
-  const [gender, setGender] = useState("");
   const [height, setHeight] = useState("");
   const lan = useSelector((state) => state.lan.lan);
 
@@ -64,7 +57,6 @@ export default function InformationScreen() {
           setName(userInfo.name || "");
           setAge(userInfo.age || "");
           setWeight(userInfo.weight || "");
-          setGender(userInfo.gender || "");
           setHeight(userInfo.height || "");
         }
       } catch (error) {
@@ -93,10 +85,6 @@ export default function InformationScreen() {
     (itemValue) => setWeight(itemValue),
     []
   );
-  const handleGenderChange = useCallback(
-    (itemValue) => setGender(itemValue),
-    []
-  );
   const handleHeightChange = useCallback(
     (itemValue) => setHeight(itemValue),
     []
@@ -108,7 +96,6 @@ export default function InformationScreen() {
         name,
         age,
         weight,
-        gender,
         height,
       });
       await AsyncStorage.setItem("@user_info", userInfo);
@@ -119,10 +106,10 @@ export default function InformationScreen() {
   };
 
   const handleNext = async () => {
-    if (!name || !gender || !age || !weight || !height) {
+    if (!name || !age || !weight || !height) {
       Alert.alert("Error", "Please fill out all fields.");
     } else {
-      console.log({ name, age, weight, gender, height });
+      console.log({ name, age, weight, height });
       await saveDataToStorage();
       navigation.navigate("HomeScreen");
     }
@@ -130,7 +117,7 @@ export default function InformationScreen() {
 
   return (
     <View style={styles.root}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.title1}>{titleText[0]}</Text>
           <Text style={styles.title2}>{titleText[1]}</Text>
@@ -159,12 +146,6 @@ export default function InformationScreen() {
             selectedValue={height}
             onValueChange={handleHeightChange}
             items={heightItems}
-          />
-          <PickerField
-            label={localizedData.gender}
-            selectedValue={gender}
-            onValueChange={handleGenderChange}
-            items={genderItems}
           />
         </View>
         <View

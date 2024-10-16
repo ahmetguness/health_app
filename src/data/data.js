@@ -15,13 +15,6 @@ export const CAROUSEL_DATA = [
   },
 ];
 
-export const genderItems = [
-  { label: "Select Gender", value: "" },
-  { label: "Male", value: "Male" },
-  { label: "Female", value: "Female" },
-  { label: "Other", value: "Other" },
-];
-
 export const weightItems = [
   { label: "Select Weight", value: "" },
   ...Array.from({ length: 180 }, (_, i) => ({

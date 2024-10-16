@@ -7,6 +7,10 @@ const store = configureStore({
     lan: LanSlice.reducer,
     refresh: RefreshSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

@@ -106,5 +106,6 @@
   "male": "Erkek",
   "female": "Kadın",
   "other": "Diğer",
-  "selectGender": "Cinsiyet Seç"
+  "selectGender": "Cinsiyet Seç",
+  "enter": "Giriniz"
 }
