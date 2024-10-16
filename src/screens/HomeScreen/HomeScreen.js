@@ -245,7 +245,7 @@ const HomeScreen = () => {
       }
       await AsyncStorage.setItem("@lan", newLan);
       dispatcher(updateLan(newLan));
-      setCalendarKey((prevKey) => prevKey + 1); // Takvimi güncelle
+      setCalendarKey((prevKey) => prevKey + 1);
     } catch (e) {
       console.error("Error changing language", e);
     }
@@ -291,13 +291,17 @@ const HomeScreen = () => {
         localizedData.saturday,
       ],
       dayNamesShort: [
-        localizedData.sunday.slice(0, 3),
+        lan === "en"
+          ? localizedData.sunday.slice(0, 3)
+          : localizedData.sundayShrt,
         localizedData.monday.slice(0, 3),
         localizedData.tuesday.slice(0, 3),
         localizedData.wednesday.slice(0, 3),
         localizedData.thursday.slice(0, 3),
         localizedData.friday.slice(0, 3),
-        localizedData.saturday.slice(0, 3),
+        lan === "en"
+          ? localizedData.saturday.slice(0, 3)
+          : localizedData.saturdayShrt,
       ],
     };
     LocaleConfig.defaultLocale = lan;

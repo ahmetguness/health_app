@@ -107,5 +107,7 @@
   "female": "Kadın",
   "other": "Diğer",
   "selectGender": "Cinsiyet Seç",
-  "enter": "Giriniz"
+  "enter": "Giriniz",
+  "sundayShrt": "Pzr",
+  "saturdayShrt": "Cmrt"
 }

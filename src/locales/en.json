@@ -107,5 +107,7 @@
   "female": "Female",
   "other": "Other",
   "selectGender": "Select Gender",
-  "enter": "Enter"
+  "enter": "Enter",
+  "sundayShrt": "null",
+  "saturdayShrt": "null"
 }
