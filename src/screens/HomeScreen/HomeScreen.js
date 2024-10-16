@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Calendar } from "react-native-calendars";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 import ManagementCard from "../../components/cards/ManagementCard";
 import { styles } from "./styles";
 import { daysOfWeek, MANAGEMENT_MENU, monthsOfYear } from "../../data/data";
@@ -29,6 +29,8 @@ const HomeScreen = () => {
   const { height } = Dimensions.get("window");
   const today = new Date().toISOString().split("T")[0];
 
+  const dispatcher = useDispatch();
+  const [calendarKey, setCalendarKey] = useState(0);
   const refreshNeeded = useSelector((state) => state.refresh.refreshNeeded);
   const [selectedDate, setSelectedDate] = useState(today);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -232,8 +234,6 @@ const HomeScreen = () => {
     }
   };
 
-  const dispatcher = useDispatch();
-
   async function toggleLan() {
     try {
       const currentLan = await AsyncStorage.getItem("@lan");
@@ -245,11 +245,65 @@ const HomeScreen = () => {
       }
       await AsyncStorage.setItem("@lan", newLan);
       dispatcher(updateLan(newLan));
+      setCalendarKey((prevKey) => prevKey + 1); // Takvimi güncelle
     } catch (e) {
       console.error("Error changing language", e);
     }
   }
 
+  useEffect(() => {
+    LocaleConfig.locales[lan] = {
+      monthNames: [
+        localizedData.january,
+        localizedData.february,
+        localizedData.march,
+        localizedData.april,
+        localizedData.may,
+        localizedData.june,
+        localizedData.july,
+        localizedData.august,
+        localizedData.september,
+        localizedData.october,
+        localizedData.november,
+        localizedData.december,
+      ],
+      monthNamesShort: [
+        localizedData.january.slice(0, 3),
+        localizedData.february.slice(0, 3),
+        localizedData.march.slice(0, 3),
+        localizedData.april.slice(0, 3),
+        localizedData.may.slice(0, 3),
+        localizedData.june.slice(0, 3),
+        localizedData.july.slice(0, 3),
+        localizedData.august.slice(0, 3),
+        localizedData.september.slice(0, 3),
+        localizedData.october.slice(0, 3),
+        localizedData.november.slice(0, 3),
+        localizedData.december.slice(0, 3),
+      ],
+      dayNames: [
+        localizedData.sunday,
+        localizedData.monday,
+        localizedData.tuesday,
+        localizedData.wednesday,
+        localizedData.thursday,
+        localizedData.friday,
+        localizedData.saturday,
+      ],
+      dayNamesShort: [
+        localizedData.sunday.slice(0, 3),
+        localizedData.monday.slice(0, 3),
+        localizedData.tuesday.slice(0, 3),
+        localizedData.wednesday.slice(0, 3),
+        localizedData.thursday.slice(0, 3),
+        localizedData.friday.slice(0, 3),
+        localizedData.saturday.slice(0, 3),
+      ],
+    };
+    LocaleConfig.defaultLocale = lan;
+    setCalendarKey((prevKey) => prevKey + 1);
+  }, [lan]);
+  console.log("test");
   return (
     <View style={styles.root}>
       <View style={[styles.navbar, { height: height * 0.06 }]}>
@@ -273,6 +327,7 @@ const HomeScreen = () => {
 
       <View style={styles.calendarContainer}>
         <Calendar
+          key={calendarKey}
           style={styles.calendar}
           onDayPress={handleDayPress}
           markedDates={{
