@@ -109,5 +109,8 @@
   "selectGender": "Cinsiyet Seç",
   "enter": "Giriniz",
   "sundayShrt": "Pzr",
-  "saturdayShrt": "Cmrt"
+  "saturdayShrt": "Cmrt",
+  "notificationScheduled": "Bildirim Planlandı",
+  "youWillBeReminded": "için bildirim alacaksınız",
+  "dayBeforeTheAppointment": "gün önce randevunuz"
 }

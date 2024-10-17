@@ -18,6 +18,7 @@ export default function MedicineCard({
 }) {
   const lan = useSelector((state) => state.lan.lan);
   const localizedData = lan === "en" ? en : tr;
+
   return (
     <View style={styles.card}>
       <View style={styles.cardContent}>
@@ -29,8 +30,17 @@ export default function MedicineCard({
           </Text>
           <Text style={styles.info}>
             {localizedData.times}:{" "}
-            {doseTimes.map((time) => time.toLocaleTimeString()).join(", ")}
+            {doseTimes
+              .map((time) =>
+                time.toLocaleTimeString(lan === "en" ? "en-US" : "tr-TR", {
+                  hour: lan === "en" ? "numeric" : "2-digit",
+                  minute: "2-digit",
+                  hour12: lan === "en",
+                })
+              )
+              .join(", ")}
           </Text>
+
           <Text style={styles.info}>
             {localizedData.days}:{" "}
             {selectedDays

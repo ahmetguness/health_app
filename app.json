@@ -18,6 +18,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/default/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "notification": {
+        "icon": "./src/assets/icons/main_icon/main_icon.jpg",
+        "color": "#ffffff"
       }
     },
     "web": {

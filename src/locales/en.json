@@ -109,5 +109,8 @@
   "selectGender": "Select Gender",
   "enter": "Enter",
   "sundayShrt": "null",
-  "saturdayShrt": "null"
+  "saturdayShrt": "null",
+  "notificationScheduled": "Notification Scheduled",
+  "youWillBeReminded": "You will be reminded",
+  "dayBeforeTheAppointment": "day(s) before the appointment"
 }

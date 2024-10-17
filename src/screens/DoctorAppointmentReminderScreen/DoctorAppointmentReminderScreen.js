@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
-  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,7 +18,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
 import { useSelector } from "react-redux";
-import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
@@ -105,20 +103,28 @@ export default function DoctorAppointmentReminderScreen() {
     triggerDate.setHours(time.getHours(), time.getMinutes(), 0);
 
     const formattedDate = date.toLocaleDateString();
-    const formattedTime = time.toLocaleTimeString();
+    const formattedTime =
+      lan === "tr"
+        ? time.toLocaleTimeString("tr-TR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : time.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Doctor Appointment Reminder",
-        body: `You have an appointment with Dr. ${appointment.doctorName} at ${appointment.hospital} (${appointment.department}) on ${formattedDate} at ${formattedTime}.`,
+        title: localizedData.doctorAppointmentReminder,
+        body:
+          lan === "en"
+            ? `You have an appointment with Dr. ${appointment.doctorName} at ${appointment.hospital} (${appointment.department}) on ${formattedDate} at ${formattedTime}.`
+            : `Dr. ${appointment.doctorName} ile ${formattedDate} tarihinde, ${formattedTime} saatinde, ${appointment.hospital} (${appointment.department}) hastanesinde bir randevunuz var.`,
       },
       trigger: triggerDate,
     });
-
-    Alert.alert(
-      "Notification Scheduled",
-      `You will be reminded ${daysBeforeNotification} day(s) before the appointment.`
-    );
   };
 
   const handleSaveAppointment = async () => {
@@ -272,14 +278,23 @@ export default function DoctorAppointmentReminderScreen() {
               />
               <Text style={styles.timeText}>
                 {localizedData.selectedTime}:{" "}
-                {selectedTime.toLocaleTimeString()}
+                {lan === "tr"
+                  ? selectedTime.toLocaleTimeString("tr-TR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : selectedTime.toLocaleTimeString([], {
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
               </Text>
             </View>
             {showTimePicker && (
               <DateTimePicker
                 value={selectedTime}
                 mode="time"
-                is24Hour={true}
+                is24Hour={lan === "tr"} // 24-hour format for Turkish
                 display="default"
                 onChange={handleTimePick}
               />
@@ -318,52 +333,74 @@ export default function DoctorAppointmentReminderScreen() {
       </Modal>
 
       <ScrollView>
-        {appointments.map((appointment, index) => (
-          <View key={index} style={styles.card}>
-            <View>
-              <Text style={styles.cardText}>
-                {localizedData.department}: {appointment.department}
-              </Text>
-              <Text style={styles.cardText}>
-                {localizedData.hospital}: {appointment.hospital}
-              </Text>
-              <Text style={styles.cardText}>
-                {localizedData.doctorName}: {appointment.doctorName}
-              </Text>
-              <Text style={styles.cardText}>
-                {localizedData.note}: {appointment.note || "No note"}
-              </Text>
-              <Text style={styles.cardText}>
-                {localizedData.date}: {appointment.date.toLocaleDateString()}
-              </Text>
-              <Text style={styles.cardText}>
-                {localizedData.time}: {appointment.time.toLocaleTimeString()}
-              </Text>
-              <Text style={styles.cardText}>
-                {localizedData.notify}: {appointment.daysBeforeNotification}{" "}
-                {localizedData.daysBefore}
-              </Text>
+        {appointments.map((appointment, index) => {
+          const isPastAppointment = new Date() > appointment.date;
+
+          return (
+            <View
+              key={index}
+              style={[
+                styles.card,
+                { backgroundColor: isPastAppointment ? "#d3d3d3" : "#ffffff" },
+              ]}
+            >
+              <View>
+                <Text style={styles.cardText}>
+                  {localizedData.department}: {appointment.department}
+                </Text>
+                <Text style={styles.cardText}>
+                  {localizedData.hospital}: {appointment.hospital}
+                </Text>
+                <Text style={styles.cardText}>
+                  {localizedData.doctorName}: {appointment.doctorName}
+                </Text>
+                <Text style={styles.cardText}>
+                  {localizedData.note}: {appointment.note || "No note"}
+                </Text>
+                <Text style={styles.cardText}>
+                  {localizedData.date}: {appointment.date.toLocaleDateString()}
+                </Text>
+                <Text style={styles.cardText}>
+                  {localizedData.time}:{" "}
+                  {lan === "tr"
+                    ? appointment.time.toLocaleTimeString("tr-TR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : appointment.time.toLocaleTimeString([], {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                </Text>
+                <Text style={styles.cardText}>
+                  {localizedData.notify}: {appointment.daysBeforeNotification}{" "}
+                  {localizedData.daysBefore}
+                </Text>
+              </View>
+              <View style={styles.iconContainer}>
+                <TouchableOpacity onPress={() => handleEditAppointment(index)}>
+                  <MaterialIcons
+                    name="edit"
+                    size={24}
+                    color="blue"
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleDeleteAppointment(index)}
+                >
+                  <MaterialIcons
+                    name="delete"
+                    size={24}
+                    color="red"
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity onPress={() => handleEditAppointment(index)}>
-                <MaterialIcons
-                  name="edit"
-                  size={24}
-                  color="blue"
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDeleteAppointment(index)}>
-                <MaterialIcons
-                  name="delete"
-                  size={24}
-                  color="red"
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
     </View>
   );

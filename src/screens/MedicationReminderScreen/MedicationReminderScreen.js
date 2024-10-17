@@ -21,24 +21,6 @@ import { useSelector } from "react-redux";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
 
-const scheduleMedicationNotification = async (medication, time, day) => {
-  const formattedTime = time.toLocaleTimeString();
-  const formattedDay = daysOfWeek[day];
-
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Medication Reminder",
-      body: `It's time to take your medication: ${medication.name} on ${formattedDay} at ${formattedTime}.`,
-    },
-    trigger: {
-      hour: time.getHours(),
-      minute: time.getMinutes(),
-      repeats: true,
-      weekday: day + 1,
-    },
-  });
-};
-
 export default function MedicationReminderScreen() {
   const { height } = Dimensions.get("window");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -54,6 +36,35 @@ export default function MedicationReminderScreen() {
 
   const lan = useSelector((state) => state.lan.lan);
   const localizedData = lan === "en" ? en : tr;
+
+  const scheduleMedicationNotification = async (medication, time, day) => {
+    const formattedTime = time.toLocaleTimeString(
+      lan === "en" ? "en-US" : "tr-TR",
+      {
+        hour: lan === "en" ? "numeric" : "2-digit",
+        minute: "2-digit",
+        hour12: lan === "en", // Use AM/PM format if language is English
+      }
+    );
+    const formattedDay = daysOfWeek[day];
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: localizedData.medicationReminder,
+        body:
+          lan === "en"
+            ? `It's time to take your medication: ${medication.name} at ${formattedTime}.`
+            : `${medication.name} ilacınızı, saat ${formattedTime}'de almayı unutmayın!`,
+      },
+
+      trigger: {
+        hour: time.getHours(),
+        minute: time.getMinutes(),
+        repeats: true,
+        weekday: day + 1,
+      },
+    });
+  };
 
   useEffect(() => {
     const loadMedications = async () => {
@@ -233,7 +244,11 @@ export default function MedicationReminderScreen() {
                   }}
                 />
                 <Text style={styles.timeText}>
-                  Selected Time: {time.toLocaleTimeString()}
+                  Selected Time:{" "}
+                  {time.toLocaleTimeString("tr-TR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Text>
               </View>
             ))}
