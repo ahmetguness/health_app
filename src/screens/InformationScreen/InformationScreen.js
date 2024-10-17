@@ -89,7 +89,6 @@ export default function InformationScreen() {
     (itemValue) => setHeight(itemValue),
     []
   );
-
   const saveDataToStorage = async () => {
     try {
       const userInfo = JSON.stringify({

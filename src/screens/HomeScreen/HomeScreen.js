@@ -79,7 +79,6 @@ const HomeScreen = () => {
       console.error("Async Storage okuma hatası:", error);
     }
   };
-
   useEffect(() => {
     getMealsForToday();
   }, [refreshNeeded]);
@@ -307,7 +306,7 @@ const HomeScreen = () => {
     LocaleConfig.defaultLocale = lan;
     setCalendarKey((prevKey) => prevKey + 1);
   }, [lan]);
-  console.log("test");
+
   return (
     <View style={styles.root}>
       <View style={[styles.navbar, { height: height * 0.06 }]}>

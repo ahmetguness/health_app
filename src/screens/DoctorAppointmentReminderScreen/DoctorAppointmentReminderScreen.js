@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,6 +19,16 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
 import { useSelector } from "react-redux";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function DoctorAppointmentReminderScreen() {
   const { height } = Dimensions.get("window");
@@ -86,6 +97,30 @@ export default function DoctorAppointmentReminderScreen() {
     setSelectedTime(currentTime);
   };
 
+  const scheduleNotification = async (appointment) => {
+    const { date, time, daysBeforeNotification } = appointment;
+
+    const triggerDate = new Date(date);
+    triggerDate.setDate(date.getDate() - daysBeforeNotification);
+    triggerDate.setHours(time.getHours(), time.getMinutes(), 0);
+
+    const formattedDate = date.toLocaleDateString();
+    const formattedTime = time.toLocaleTimeString();
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Doctor Appointment Reminder",
+        body: `You have an appointment with Dr. ${appointment.doctorName} at ${appointment.hospital} (${appointment.department}) on ${formattedDate} at ${formattedTime}.`,
+      },
+      trigger: triggerDate,
+    });
+
+    Alert.alert(
+      "Notification Scheduled",
+      `You will be reminded ${daysBeforeNotification} day(s) before the appointment.`
+    );
+  };
+
   const handleSaveAppointment = async () => {
     if (
       department.trim() === "" ||
@@ -119,6 +154,9 @@ export default function DoctorAppointmentReminderScreen() {
       "appointments",
       JSON.stringify(updatedAppointments)
     );
+
+    await scheduleNotification(newAppointment);
+
     handleCloseModal();
   };
 

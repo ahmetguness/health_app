@@ -1,3 +1,4 @@
+import * as Notifications from "expo-notifications";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -19,6 +20,24 @@ import { styles } from "./styles";
 import { useSelector } from "react-redux";
 import en from "../../locales/en.json";
 import tr from "../../locales/tr.json";
+
+const scheduleMedicationNotification = async (medication, time, day) => {
+  const formattedTime = time.toLocaleTimeString();
+  const formattedDay = daysOfWeek[day];
+
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Medication Reminder",
+      body: `It's time to take your medication: ${medication.name} on ${formattedDay} at ${formattedTime}.`,
+    },
+    trigger: {
+      hour: time.getHours(),
+      minute: time.getMinutes(),
+      repeats: true,
+      weekday: day + 1,
+    },
+  });
+};
 
 export default function MedicationReminderScreen() {
   const { height } = Dimensions.get("window");
@@ -83,6 +102,15 @@ export default function MedicationReminderScreen() {
       "medications",
       JSON.stringify(updatedMedications)
     );
+
+    selectedDays.forEach((isSelected, dayIndex) => {
+      if (isSelected) {
+        doseTimes.forEach((time) => {
+          scheduleMedicationNotification(newMedication, time, dayIndex);
+        });
+      }
+    });
+
     handleCloseModal();
   };
 
