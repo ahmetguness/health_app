@@ -75,4 +75,22 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 20,
   },
+  secBtn: {
+    height: 40,
+  },
+  timeContainer: {
+    height: 40,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "5%",
+  },
+  lastItem: {
+    marginBottom: 0,
+  },
+  timeText: {
+    marginLeft: "5%",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });

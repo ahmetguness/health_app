@@ -235,25 +235,35 @@ export default function MedicationReminderScreen() {
               ))}
             </ScrollView>
 
-            {doseTimes.map((time, index) => (
-              <View key={index} style={styles.timeContainer}>
-                <SecondaryButton
-                  title="Edit Time"
-                  onPress={() => {
-                    setShowTimePicker(true);
-                  }}
-                />
-                <Text style={styles.timeText}>
-                  Selected Time:{" "}
-                  {time.toLocaleTimeString("tr-TR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Text>
-              </View>
-            ))}
+            <View style={{ marginTop: "5%" }}>
+              {doseTimes.map((time, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.timeContainer,
+                    index === doseTimes.length - 1 ? styles.lastItem : null,
+                  ]}
+                >
+                  <SecondaryButton
+                    title={localizedData.editTime}
+                    onPress={() => {
+                      setShowTimePicker(true);
+                    }}
+                    style={styles.secBtn}
+                  />
+                  <Text style={styles.timeText}>
+                    {localizedData.selectedTime}:{" "}
+                    {time.toLocaleTimeString("tr-TR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </Text>
+                </View>
+              ))}
+            </View>
 
             <SecondaryButton
+              style={[styles.secBtn, { width: "100%", marginTop: "5%" }]}
               title={localizedData.selectTime}
               onPress={() => setShowTimePicker(true)}
             />
@@ -269,10 +279,12 @@ export default function MedicationReminderScreen() {
 
             <View style={styles.buttonContainer}>
               <SecondaryButton
+                style={styles.secBtn}
                 title={localizedData.save}
                 onPress={handleSaveMedication}
               />
               <SecondaryButton
+                style={styles.secBtn}
                 title={localizedData.close}
                 onPress={handleCloseModal}
               />

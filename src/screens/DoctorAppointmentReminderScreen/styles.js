@@ -74,6 +74,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+    marginBottom: 30,
   },
   card: {
     flexDirection: "row",

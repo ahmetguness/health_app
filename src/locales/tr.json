@@ -112,5 +112,7 @@
   "saturdayShrt": "Cmrt",
   "notificationScheduled": "Bildirim Planlandı",
   "youWillBeReminded": "için bildirim alacaksınız",
-  "dayBeforeTheAppointment": "gün önce randevunuz"
+  "dayBeforeTheAppointment": "gün önce randevunuz",
+  "editTime": "Saati Düzenle"
+
 }

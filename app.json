@@ -4,10 +4,10 @@
     "slug": "health_app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/default/icon.png",
+    "icon": "./src/assets/icons/main_icon/main_icon.jpg",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./src/assets/default/splash.png",
+      "image": "./src/assets/app_inside/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,10 +22,16 @@
       "notification": {
         "icon": "./src/assets/icons/main_icon/main_icon.jpg",
         "color": "#ffffff"
-      }
+      },
+      "package": "com.guness.health_app"
     },
     "web": {
       "favicon": "./src/assets/default/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "15fba5cf-3eee-45ce-91eb-8937789df0ef"
+      }
     }
   }
 }
