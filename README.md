@@ -36,7 +36,7 @@ A comprehensive health and wellness tracking application built with React Native
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/health_app.git
+git clone https://github.com/ahmetguness/health_app.git
 cd health_app
 ```
 
